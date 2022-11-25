@@ -1,3 +1,3 @@
 # MOUMS
 
-R codes for the thesis Chapter 2
+R codes for Chapter 2 of Thesis.
