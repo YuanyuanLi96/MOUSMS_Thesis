@@ -1,0 +1,587 @@
+\documentclass[12pt]{article} %***
+\usepackage[sectionbib]{natbib}
+\usepackage{array,epsfig,fancyheadings,rotating}
+\usepackage[]{hyperref}  %<----modified by Ivan
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{sectsty, secdot}
+%\sectionfont{\fontsize{12}{15}\selectfont}
+\sectionfont{\fontsize{12}{14pt plus.8pt minus .6pt}\selectfont}
+\renewcommand{\theequation}{\thesection\arabic{equation}}
+\subsectionfont{\fontsize{12}{14pt plus.8pt minus .6pt}\selectfont}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textwidth=31.9pc
+\textheight=46.5pc
+\oddsidemargin=1pc
+\evensidemargin=1pc
+\headsep=15pt
+%\headheight=.2cm
+\topmargin=.6cm
+\parindent=1.7pc
+\parskip=0pt
+
+\usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{multirow}
+\usepackage{amsthm}
+
+\setcounter{page}{1}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+%\newtheorem{proof}{Proof}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+\pagestyle{fancy}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{fancy}
+\def\n{\noindent}
+\lhead[\fancyplain{} \leftmark]{}
+\chead[]{}
+\rhead[]{\fancyplain{}\rightmark}
+\cfoot{}
+\usepackage{chngcntr}
+
+\counterwithin*{equation}{section}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\baselinestretch}{2}
+
+\markright{ \hbox{\footnotesize\rm Statistica Sinica
+%{\footnotesize\bf 24} (201?), 000-000
+}\hfill\\[-13pt]
+\hbox{\footnotesize\rm
+%\href{http://dx.doi.org/10.5705/ss.20??.???}{doi:http://dx.doi.org/10.5705/ss.20??.???}
+}\hfill }
+
+\markboth{\hfill{\footnotesize\rm Yuanyuan Li AND Jiming Jiang} \hfill}
+{\hfill {\footnotesize\rm MOU for Shrinkage Model Selection} \hfill}
+
+\renewcommand{\thefootnote}{}
+$\ $\par
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\fontsize{12}{14pt plus.8pt minus .6pt}\selectfont \vspace{0.8pc}
+\centerline{\large\bf Measures of Uncertainty for Shrinkage Model Selection}
+\vspace{2pt} 
+
+\centerline{Yuanyuan Li and Jiming Jiang} 
+\vspace{.4cm} 
+\centerline{\it Department of Statistics, University of California, Davis, U.S.A.}
+ \vspace{.55cm} \fontsize{9}{11.5pt plus.8pt minus.6pt}\selectfont
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{quotation}
+\noindent {\it Abstract:}
+We develop measures of uncertainty, including model confidence sets and a LogP measure, for shrinkage model selection procedures. The measures are developed for linear models, generalized linear models, and generalized additive models. We study the theoretical and empirical properties of the proposed measures, and demonstrate how theses measures by applying them to real-life problems.
+
+\vspace{9pt}
+\noindent {\it Key words and phrases:}
+Asymptotic coverage probability, Average probability of coverage; Consistency, Nested MCS, Shrinkage model selection, Uncertainty
+\par
+\end{quotation}\par
+
+
+
+\def\thefigure{\arabic{figure}}
+\def\thetable{\arabic{table}}
+
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+
+
+\fontsize{12}{14pt plus.8pt minus .6pt}\selectfont
+
+
+
+\section{Introduction}
+\label{s:intro}
+
+Driven largely by practical needs, measures of uncertainty in model selection have been studied by, among others, \citet{Hansen}, \citet{Ferrari2015}, \citet{Lubke2016} (also, see \citet{Lubke2017} and the references therein), \citet{Zheng2019}, \citet{Li2019}, and \citet{Liu2021}. For example, \citet{Conlon2003} discussed a motif regression problem. One of their study objectives is to find binding sites in DNA sequences of an NDD1 transcriptional activator, which is essential for the expression of a set of late-S-phase-specific genes. \citet{Pang2016} formulated these study objectives as a shrinkage variable selection problem, and several models were proposed based on various selection criteria. We revisit tthis problem later. As another example, \citet{Subramanian} proposed using a gene set enrichment analysis (GSEA) to assess the significance of predefined gene sets. \citet{efron2007} proposed an alternative method, called a gene-set analysis (GSA), that produced different selection results to those of the GSEA when applied to the p53 data with the catalog of 522 gene sets in \citet{Subramanian}. Quite often in practice, researchers use different variables and models when applying model-selection procedures, and it is not clear which is most suitable when the selection results vary with different procedures or methods. For example, standard model selection procedures include information criteria [e.g., AIC (\citet{1973}), BIC (\citet{Schwarz})], the fence methods (e.g., \citet{Jiang2016}), and shrinkage selection/estimation [e.g., the least absolute shrinkage and selection operator (lasso) (\citet{Tibshirani1996}), and smoothly clipped absolute deviation (SCAD) (\citet{fan2001}) estimators].
+
+Alternatively, instead of focusing on a single model that may correspond to a subset of selected variables, one may consider a few models as possibilities. These models are all appropriate because they are the results of model selection based on different considerations. There may be other ways to justify these models. Such a group of models naturally form a model set, which may be associated with a model confidence set (MCS). Several MCSs have been proposed; see the references mentioned in the first paragraph of this section. However, note that although an MCS is typically defined as having a designed probability of covering an optimal model (see below), in practice, the latter may not exist among the candidate models under consideration. Nevertheless, an MCS may still be useful, especially when there is uncertainty, about a single selected model.
+
+MCSs offers one type of measure of uncertainty in model selection. Another type measures the error in model selection. \citet{Liu2021} proposed a LogP measure that is an estimated logarithm of the probability of selecting a nonoptimal model. Here, an optimal model, denoted as $M_{\rm opt}$, is defined as the most parsimonious correct model, typically measured in terms of having the minimum number of model parameters. Similarly to an MCS, when a correct model may not exist, the optimal model may be understood in a broader sense as one that best approximates the nature that generates the data. This potentially extends the usefulness of LogP.
+
+Thus far, MCSs and LogP have been developed under the framework of classical model selection, where we have a finite set of candidate models with cardinality that does not increase with the sample size. Here, the consistency of the model selection is typically established for the selected model according to a certain model selection criterion. For example, \citet{Liu2021} studied both the finite-sample and the asymptotic behavior of their proposed MCS and LogP measures. However, such methods may not apply to modern model selection problems, which are characterized by high dimensionality. It is known that shrinkage model selection (\citet{Tibshirani1996}) methods are often suitable for high-dimensional variable selection problems. The MCS method called Model confidence bounds (MCB) of \citet{Li2019} incorporates shrinkage methods, making it promising for high-dimensional model selection. However, no studies have examined the performance of MCB in high-dimensional cases and for models beyond a linear regression, whether empirically or theoretically. Thus, the main purpose of this work is to develop MCS and LogP strategies that are suitable for shrinkage model selection, including linear models, generalized linear models (GLMs), and generalized additive models (GAMs). We also compare the performance of the proposed MCS method with that of MCB in high-dimensional cases using simulation studies.
+
+In Section 2, we develop the MCS and LogP measures for linear models, GLMs, GAMs, and, in Section 3, we examine the properties of the proposed measures. In Section 4, we investigate the finite-sample performance of the proposed measures using Monte Carlo simulation studies. Two real-data applications are discussed in Section 5. The proofs of the theoretical results are deferred to the online Supplementary Material.
+\section{Methods}
+
+We first develop the measures under a linear model setting, before considering extensions to other general models.
+\subsection{Constructing a nested MCS for $M_{\rm opt}$}
+\subsubsection{Linear models}
+Suppose the data are generated under linear model,
+\begin{eqnarray}
+    y = X \beta+\varepsilon,
+\end{eqnarray}\label{eq:Lreg}
+where $y$ is an $n\times 1$ vector of responses, $X$ is an $n\times p$ known matrix of covariates, and $\varepsilon= (\varepsilon_1, \cdots, \varepsilon_n)$ is a vector of independent and identically distributed (i.i.d.) errors with mean $0$ and variance $\sigma^2$. Consider a lasso solution fitting the model
+\begin{eqnarray}
+\min_{\beta} ||y-X\beta||_2^2+ \lambda ||\beta||_1,\label{lassof}
+\end{eqnarray}
+where $\lambda>0$ denotes the penalty or regularization parameter. \citet{efron2004} proposed the least angle regression (LARS) algorithm to compute the full solution path of the lasso. As $\lambda$ decreases from a large value, the covariates enter the model at a certain order, say $\text{EO}= \{e_1, e_2, \cdots, e_p\}$, where EO means ``Entering Order". For any fixed $\lambda$, we have a corresponding selected model, $\hat{M}=\{e_1, \cdots, e_k\}$, that is, we select the first $k$ covariates in EO. Different $\lambda$ will result in different numbers of covariates in the selected model. However, the order of the covariates entering the model is fixed, and depends only on the data. Usually, $\lambda$ is chosen using cross-validation or an information criterion; see, for example, \citet{Fu2005} and \citet{wang2009}. In rare cases, some covariates enter the model and leave multiple times, usually because of the strong correlation between covariates, and we define EO using a two-step approach based on the selected model $\hat{M}$. A detailed description and discussion are provided in the Supplementary Material (see Section S1).
+
+Let $\hat{M}$ denote the model selected using the original data, and $\hat{\psi}$ be the vector of estimated parameters under $\hat{M}$. Later, we investigate the model using bootstrapped data. Furthermore, note that $\hat{M}$ is the first $q$ elements in EO, for some positive integer $q$. Because EO may be viewed as an order of relative importance among the covariates, we may eliminate relatively unimportant members from $\hat{M}$ to form a ``smaller'' model, $\hat{M}_{\rm L}$, called a lower bound model (LBM). Note that this is different to the LBM of \citet{Ferrari2015}, even though the same abbreviation is used. Similarly, adding more covariates in EO to $\hat{M}$ results in a ``larger'' model, $\hat{M}_{\rm U}$, called an upper bound model (UBM). It is easy to see that $\hat{M}_{\rm L} \subseteq \hat{M} \subseteq \hat{M}_{\rm U}$. If the pair of models $\{\hat{M}_L$, $\hat{M}_U\}$ satisfies
+\begin{align}
+{\rm P}(\hat{M}_L \subseteq M_{\rm opt} \subseteq \hat{M}_U) \geq 1-\alpha,\label{NMCS}
+\end{align}
+where $M_{\rm opt}$ is the optimal model, that is, the most parsimonious true model under which data can be generated from the same distribution as that of the observed data (\citet{Liu2021}), then $\{M: \hat{M}_L \subseteq M \subseteq \hat{M}_U, M \subset \mathcal{M}\}$ is a $100(1-\alpha)\%$ MCS for $M_{\rm opt}$, denoted as $(\hat{M}_L, \hat{M}_U)$. We call this a nested MCS (NMCS), because the construction is based on a nested sequence of models; the resulting MCS is a nested sequence between the LBM and the UBM.
+
+It remains to determine how many covariates should be eliminated, and added, to form the LBM and UBM, respectively, so that (\ref{NMCS}) holds. Because $M_{\rm opt}$ and $\psi_{\rm opt}$ are unknown, the probability in (\ref{NMCS}) cannot be calculated directly. Following \citet{Liu2021}, we can approximate the probability in (\ref{NMCS}) using bootstrapping. Furthermore, an NMCS should include as few models as possible in order to be efficient. As such, we define the width of an NMCS as
+\begin{eqnarray}\label{eq:width}
+w(\hat{M}_{\rm L}, \hat{M}_{\rm U})= |\hat{M}_{\rm U}|- |\hat{M}_{\rm L}|,
+\end{eqnarray}
+where $|M|$ denotes the number of covariates included in model $M$. For a given width $w$, we determine the NMCS as follows:
+\begin{eqnarray}\label{eq:NMCS}
+\text{NMCS}(w)= \argmax_{(\hat{M}_1, \hat{M}_2)}\{{\rm P}(\hat{M}_1 \subseteq M_{\rm opt} \subseteq \hat{M}_2) : \nonumber \\
+w(\hat{M}_1, \hat{M}_2)= w, \hat{M}_1 \subseteq \hat{M} \subseteq \hat{M}_2\},
+\end{eqnarray}
+where the probability P is approximated using bootstrapping (see below). In addition, because the width of an NMCS is a positive integer, we only need to consider (\ref{eq:width}) for $w$ that are positive integers. The coverage probability of the NMCS is then a function of $w$,
+\begin{eqnarray}\label{eq:CP}
+\text{CP}(w) = {\rm P}[M_{\rm opt} \in \text{NMCS}(w)].
+\end{eqnarray}
+Suppose that the optimal model satisfies $M_{\rm null}\subseteq M_{\rm opt}\subseteq M_{\rm full}$. Then, we increase $w$ from zero (include only $\hat{M}$) to $p$ (i.e., the model with no covariate, $M_{\rm null}$, as the LBM, and the model with all of the covariates, $M_{\rm full}$, as the UBM) so that (\ref{NMCS}) is ``just'' satisfied. As $w$ increases, $\text{NMCS}(w)$ gets ``wider'' and $\text{CP}(w)$ gets closer to one. Therefore, there is a unique $w$ such that $\text{CP}(w-1) < 1-\alpha$ and $\text{CP}(w) \geq 1-\alpha$. In the special case where $\text{CP}(0)\geq 
+1-\alpha$, the NMCS reduces to a single model, $\hat{M}$. We can use the following bootstrap algorithm to obtain the final NMCS.
+
+{\bf Algorithm 1}: $100(1-\alpha)\%$ NMCS construction
+\begin{enumerate}
+    \item Generate $B$ bootstrap samples $y^*_{[b]}$ under the distribution under model $\hat{M}$ and parameter vector $\hat{\psi}$.
+    \item For $b=1,\cdots, B$, record the EO in lasso selection based on the $b$th bootstrap data $(y^*_{[b]}, X)$, denoted by $\text{EO}^*_{[b]}= \{e_{1,[b]}^*, \cdots, e_{p,[b]}^*\}$, and the selected model $\hat{M}$, denoted by $\hat{M}^*_{[b]} = \{e_{1,[b]}^*, \cdots, e_{k_b,[b]}^*\}$.
+    \item For $w=0,\cdots, 2p$, calculate the bootstrapped coverage probabilities of NMCS$(w)$, ${\text{CP}}^*(w) = \max\limits_{0 \leq j \leq w}B^{-1}\sum_{b=1}^B 1(\hat{M}^*_{-w+j,[b]} \subseteq \hat{M} \subseteq \hat{M}^*_{j,[b]})$, where $\hat{M}^*_{-w+j,[b]} = \{e_{1,[b]}^*, \cdots, e_{k_b-w+j,[b]}^*\}$, $\hat{M}^*_{j,[b]} = \{e_{1,[b]}^*, \cdots, e_{k_b+j,[b]}^*\}$, and $\hat{M}^*_x$ includes only the intercept term if $k_b+ x\leq 0$; $\hat{M}^*_x$ is the full model if $k_b+ x\geq p$. Denote $j$ that achieves the maximum as $f^{*}(w)$, which is a function of $w$. 
+  
+    \item Obtain the smallest $w^*$ such that ${\text{CP}}^*(w^*) \geq 1-\alpha$, and the corresponding $j^*= f^*(w^*)$.
+    \item The final $100(1-\alpha)\%$ NMCS is $(\hat{M}_{-w^*+j^*}, \hat{M}_{j^*})$, where $\hat{M}_{-w^*+j^*} = \{e_1, \cdots, e_{k-w^*+j^*}\}$ and $\hat{M}_{j^*}= \{e_1, \cdots, e_{k+j^*}\}$.
+\end{enumerate}
+
+\subsubsection{Extensions to GLMs and GAMs}
+Algorithm 1 is quite general, and thus can be extended to other models, such as GLMs and GAMs. In a GLM, the parameters in the distribution of $y$ are connected to a linear predictor, $\eta= X\beta$, via a link function. Hence, we can select the variables and generate bootstrap samples from the distribution under model $\hat{M}$. 
+
+GAMs, introduced by \citet{Hastie1986}, are generalized linear models in which the linear predictor can be represented as a sum of more general functions of a single variable: $\eta(X)=\sum_{j=1}^pf_j(X_j)$, where $f_j$ are unknown functions, assumed to be smooth or otherwise have low complexity. Some model selection criteria delete irrelevant predictors or reduce the complexity of the $f_j$ functions, such as the component selection and smoothing operator (COSSO) (\citet{Lin2006}), sparse additive model (SpAM) (\citet{Ravikumar2009}), the method of \citet{Meier2009}, and generalized additive model selection (GAMSEL)
+(\citet{Chouldechova2015}). We adopt GAMSEL in our simulation study (see section 4.1.3); other selection methods can also be used. Specifically, GAMSEL represents $f_j$ functions using a linear component and a nonlinear component; that is,
+$f_j(X_j)=\alpha_j X_j+\mu_j(X_j)^{T}\beta_j$,
+where $\mu_j$ is a vector of $m_j$ Demmler–Reinsch basis (\citet{Demmler1975}) functions. Then, GAMSEL generates sparse solutions by solving a convex optimization problem with $L_1$ penalties for $\alpha_j$ and group-lasso penalties for $\beta_j$, given by
+\begin{eqnarray}
+\min_{\alpha_0,{\alpha_j},{\beta_j}}&&\frac{1}{2}\Big\|y-\alpha_0-\sum_{j=1}^p\alpha_j X_j-\sum_{j=1}^pu_j(X_j)\beta_j\Big\|^2\nonumber\\
+&+&\lambda\sum_{j=1}^p\{\gamma|\alpha_j|+(1-\gamma)\|\beta_j\|_{D_j^*}\}
++\frac{1}{2}\sum_{j=1}^p\psi_j\beta_j^TD_j\beta_j,\label{gamsel}
+\end{eqnarray}
+where $\|\beta_j\|_{D_j^*}=\sqrt{\beta_j^TD_j^*\beta_j}$, and $D_j$ is the diagonal penalty matrix associated with the Demmler–Reinsch basis. The multiplier $\psi_j$ is chosen to control the smoothness of the basis functions, that is, to achieve prespecified degrees of freedom when $\lambda=0$. The tuning parameter $\lambda$ penalizes the linear and nonlinear coefficients of each term simultaneously, and sets all $\alpha_j=0$ and $\beta_j \equiv 0$ for large values. As $\lambda$ decreases, some estimated coefficients become nonzero. If $\hat{\alpha}_j^{\lambda}$ and $\hat{\beta}_j^{\lambda}$ include nonzero elements, $\hat{f}^{\lambda}_j(X_j)$ is either a linear or a nonlinear nonzero function; hence, the variable $X_j$ is selected into the model to construct $\eta(X)$ at the given $\lambda$. The EO in algorithm 1 can be obtained by recording the order of variables $\{X_1, \cdots, X_p\}$ that enter the model (when $\hat{f}_j(X_j)$ is nonzero) as $\lambda$ decreases. The selected model $\hat{M}$ is the model at the cross-validated tuning parameter $\hat{\lambda}$. Then, we can generate the bootstrap samples from the distribution under $\hat{M}$ and the estimated parameters, and construct the NMCS using Algorithm 1. 
+\subsection{LogP measure for $\hat{M}$}
+\hspace{4mm}
+The LogP measure proposed by \citet{Liu2021} quantifies the error in model selection. It is defined as the logarithm of the probability that the selected model is different from the optimal model,
+ \begin{eqnarray}\label{eq:LogP}
+ {\rm LogP}={\rm LogP}(\hat{M})=\log\{{\rm P}(\hat{M}\neq M_{\rm opt})\}.
+ \end{eqnarray}
+ The right side of (\ref{eq:LogP}) is evaluated using a bootstrapping procedure similar to Algorithm 1. First, we use $\hat{M}$ and $\hat{\psi}$ as approximations of $M_{\rm opt}$ and $\psi_{\rm opt}$, respectively, to generate samples $y^*_{[b]}$, for $b=1,\cdots, B$, called bootstrap samples. Second, we perform model selection procedures for all $y^*_{[b]}$, and obtain the selected models, $\hat {M}^*_{[b]}$. Then, we calculate the empirical probability that $\hat{M}^*= \hat{M}$, and obtain the estimator of (\ref{eq:LogP}) as
+  \begin{eqnarray}\label{eq:LogPhat}
+ \widehat{\rm LogP}&=&\log\Big(1-\frac{1}{B}\sum_{b=1}^B1_{(\hat{M}^*_{[b]}=\hat{M})}\Big).
+ \end{eqnarray}
+ Note that (\ref{eq:LogPhat}) is a natural estimator of LogP because of the following approximation supported by the law of large numbers:
+ \begin{eqnarray}
+ {\rm P}(\hat{M}= M_{\rm opt})\approx {\rm P}(\hat{M}^*= \hat{M})\approx
+ \frac{1}{B}\sum_{b=1}^B1_{(\hat{M}^*_{[b]}=\hat{M})}.
+  \end{eqnarray}
+ 
+Here, we use the same LogP estimator, and extend the original information-based selection criteria to include shrinkage model selection methods. The consistency property of the LogP estimator and the conditions required to achieve these need to be re-examined. We also apply this estimator to more general classes of models, namely, GLMs and GAMs. The implementation is quite similar, because the LogP measure uses only the model selected from the data, $\hat{M}$ or $\hat{M^*_{[b]}}$, despite the different model structures and shrinkage methods.  
+\section{Theoretical Properties}\label{sec_proof}
+
+In this section, we study the theoretical properties of the proposed measures of uncertainty, including the coverage probability of the NMCS and the consistency of the LogP measure.
+ \subsection{Coverage probability of the NMCS}
+
+Let $y$ denote the original data, and $y_{[1]}^{*},\dots,y_{[B]}^{*}$ be the bootstrap samples.
+The notation ${\rm P}(\cdot|M,\psi)$ denotes the probability of the event $\cdot$ when the
+underlying distribution and the parameter vector $\psi$ are from model $M$. Let
+$\hat{\psi}_{\rm opt}$ denote the estimator of $\psi_{\rm opt}$ (i.e., $\hat{\psi}$ when
+$\hat{M}=M_{\rm opt}$). We make the following assumptions.
+
+{\it A1.} The bootstrap samples $y_{[b]}^{*}$, for $1\leq b\leq B$, are generated independently
+under $\hat{M}, \hat{\psi}$.
+ 
+{\it A2.} There is a constant $c$ such that, for every $w\geq 0$, $0 \leq j \leq w$, and fixed $\tilde{\psi}_{\rm opt}$, we have
+ \begin{align}\label{eq:A2}
+&\left|{\rm P}(M_{\rm opt}\in(\hat{M}_{-w+j}^{*},\hat{M}_{j}^{*})|M_{\rm opt},\tilde{\psi}_{\rm
+ opt})-{\rm P}(M_{\rm opt}\in(\hat{M}_{-w+j}^{*},\hat{M}_{j}^{*})|M_{\rm opt},\psi_{\rm
+opt})\right| \nonumber\\
+&\leq c|\tilde{\psi}_{\rm opt}-\psi_{\rm opt}|.
+\end{align}
+ 
+ {\it A3.} ${\rm P}(\hat{M}=\hat{M}_{l}^{*}|\hat{M},\hat{\psi})>0$, for every $l\geq 0$.
+ 
+ Note that the two probabilities inside the absolute value on the left side of (\ref{eq:A2}) differ only in that the argument of $\psi_{\rm opt}$ in one probability is replaced by $\tilde{\psi}_{\rm opt}$ in the other. Furthermore, the absolute difference between the two probabilities is bounded by a constant times the absolute difference between $\psi_{\rm opt}$ and $\tilde{\psi}_{\rm opt}$. Therefore, this assumption is similar to a condition for Lipschitz continuity (e.g.,\citet[p. 316]{Thomson2008}).
+
+\begin{proposition}[Linear regression with orthogonal covariates]
+\label{th:a2}
+Let (\ref{eq:Lreg}) hold, where $\varepsilon$ has distribution $N(0,\sigma^{2}I_n)$, with $\sigma^{2}$ a positive constant, $X$ is an $n\times p$ matrix satisfying $p=O(n^{c_1})$, with $0\leq c_1<c_2\leq1$, and $X^{\rm T} X= n I_{p}$. The number of nonzero regression coefficients $q$ is fixed, and $n^{\frac{1-c_2}{2}}\min_{i=1,\cdots, q}|\beta_{i}| \geq M_0$. For $\lambda$ satisfying $\lambda=O(\sqrt{n})$, assumption {\it A2} holds.
+\end{proposition} 
+
+A proof of Proposition \ref{th:a2} is given in the Supplementary Material.
+
+\begin{theorem}
+\label{th:nmcs}
+ Assume that assumptions {\it A1}--{\it A3} hold. Let $w^{*}$, and $j^{*}$ denote $w$ and $j$, respectively, determined by step 4 in Algorithm 1.
+ As $B\rightarrow\infty$, $w^{*}$ and $j^{*}$ converge in probability, with respect to the bootstrap distribution, to the integers $w\geq 0$ and $0\leq j\leq w$, respectively, which depend on $\hat{M}$ and $\hat{\psi}$. Furthermore, for this $w$ and $j$, we have
+ {
+\footnotesize
+ \begin{eqnarray}
+ &&{\rm P}(M_{\rm opt}\in(\hat{M}_{-w+j},\hat{M}_{j}))\nonumber\\
+ &\geq&\frac{1-\alpha- {\rm P}(\hat{M}\neq M_{\rm opt})-c{\rm E}\left\{|\hat{\psi}_{\rm opt}-\psi_{\rm
+ opt}|1_{(\hat{M}=M_{\rm opt})}\right\}-o(1)}{{\rm P}(\hat{M}=M_{\rm opt})},
+\label{theo1}
+ \end{eqnarray}
+ }
+provided that ${\rm P}(\hat{M}=M_{\rm opt})>0$.
+\end{theorem}
+ 
+ Theorem \ref{th:nmcs} establishes a lower bound for the coverage probability of the NMCS, (\ref{theo1}), which depends on two quantities, namely, $\delta_{1}={\rm P}(\hat{M}\neq M_{\rm opt})$ and $\delta_{2}={\rm E}\{|\hat{\psi}_{\rm opt}-\psi_{\rm opt}|1_{(\hat{M}=M_{\rm opt})}\}$. Note that if $\hat{M}$ is a consistent model selector, then, under regularity conditions, we have $\delta_{1}\rightarrow 0$, and the denominator of (\ref{theo1}) goes to one, as the sample size, $n$, increases. Furthermore, if $\hat{\psi}_{\rm opt}$ converges in $L^2$ to $\psi_{\rm opt}$, we have $\delta_{2}\rightarrow 0$ as $n\rightarrow\infty$. Thus, as both $n, B\rightarrow\infty$, the limit of the right side of (\ref{theo1}) is $1-\alpha$. The proof of Theorem \ref{th:nmcs} is given in the Supplementary Material. 
+ \subsection{Consistency in LogP Estimation}
+ \hspace{4mm}
+Following \citet{Liu2021}, the consistency of $\widehat{\rm LogP}$ is defined as
+ \begin{eqnarray}
+ \frac{\widehat{\rm LogP}}{\rm LogP}&\stackrel{\rm P}{\longrightarrow}&1, \label{LogPc}
+ \end{eqnarray}
+ as both $n, B\rightarrow\infty$, where the convergence in probability is with respect to the
+ joint distribution of the data and the bootstrapping. The consistency holds under the following assumptions:
+ 
+{\it B1.} $\hat{M}$ is consistent.
+
+ {\it B2.} ${\rm P}(\hat{M}=M_{\rm opt})<1$ and ${\rm P}(\hat{M}^{*}=M_{\rm opt}|M_{\rm opt},\tilde{\psi}_{\rm opt})<1$, for any $\tilde{\psi}_{\rm opt}$.
+ 
+ {\it B3.} As $n\rightarrow\infty$, we have
+\begin{eqnarray}
+ \frac{\log\{{\rm P}(\hat{M}^{*}\neq M_{\rm opt}|M_{\rm opt},\hat{\psi}_{\rm opt})\}}{\log\{{\rm
+ P}(\hat{M}^{*}\neq M_{\rm opt}|M_{\rm opt},\psi_{\rm opt})\}}\stackrel{\rm P}{\longrightarrow}1. \label{B3}
+ \end{eqnarray}
+ 
+ {\it B4.} Denote the probability in the numerator of (\ref{B3}) by $P_{*}$. For any $\eta>0$, we have
+ \begin{eqnarray}
+ {\rm E}\left[\frac{1-P_{*}}{P_{*}\{(1-P_{*}^{\eta})\wedge(P_{*}^{-\eta}-1)\}^{2}}\right]
+ <\infty.
+ \end{eqnarray}
+
+ \begin{theorem}[\citet{Liu2021}]
+ \label{th:logp}
+ Under assumptions {\it B1}--{\it B4}, (\ref{LogPc}) holds in the sense that, for any $\epsilon>0$ and
+ $\rho>0$, there are $N, B_{n}\geq 1$ that depend on $\epsilon, \rho$, and $B_{n}$ depends on 
+ $n$, such that
+ \begin{eqnarray}
+ {\rm P}_{\rm J}\left(\left|\frac{\widehat{\rm LogP}}{\rm LogP}-1\right|>\epsilon\right)&<&\rho,
+ \;\;\;\;n\geq N\;{\rm and}\;B\geq B_{n},
+ \end{eqnarray}
+ where ${\rm P}_{\rm J}$ denotes the joint probability of the data and the bootstrapping.
+ \end{theorem}
+ 
+In the rest of this section, we establish the assumptions and Theorem \ref{th:logp} in a high-dimensional setting instead of the fixed–$p$ case of \citet{Liu2021}. To further illustrate when the assumptions are met, we introduce the following notation. Let $\beta_{(1)}=(\beta_1, \cdots, \beta_q)$ be the nonzero coefficients in the true model. Let $X(1)$ and $X(2)$ be the first $q$ and last $p-q$ columns of $X$, respectively, and $C = \frac{1}{n}X^TX$. By setting
+$C_{11} = \frac{1}{n}X(1)^TX(1)$, $C_{22} = \frac{1}{n}X(2)^TX(2)$, $C_{12} = \frac{1}{n}X(1)^TX(2)$, and $C_{21} = \frac{1}{n}X(2)^TX(1)$, $C$ can
+be expressed in a block-wise form as
+\begin{eqnarray}
+   C=
+\begin{pmatrix}
+C_{11} & C_{12} \\
+C_{21} & C_{22}
+\end{pmatrix}. 
+\end{eqnarray}
+Assume that $C_{11}$ is nonsingular.
+
+A strong irrepresentable condition (\citet{Zhao2006}) is usually needed to establish the consistency of a lasso selection. Therefore, there exists a positive constant vector, $\eta$, such that
+\begin{eqnarray}
+   |C_{21}C_{11}^{-1}\text{sign}(\beta_{(1)})|\leq {\bf 1}-\eta,
+\end{eqnarray}
+where ${\bf 1}$ is a $(p-q)$-dim vector of ones and the inequality holds element-wise.
+
+In a high–dimensional model selection setting, we also need to constrain the dimension of the design matrix and the sparsity of the model parameters to establish consistency. We assume there exist $0 \leq c_1 < c_2 \leq1$ and $M_1, M_2, M_3, M_4 > 0$ such that the following hold:
+\begin{align}
+    \frac{1}{n}(X_i)'(X_i) &\leq M_1, i=1,\cdots,n, \label{d1}\\
+    \alpha'C_{11}\alpha&\geq M_2, \ \text{for} \ ||\alpha||_2^2=1, \label{d2}\\
+    q&=O(n^{c_1}),\label{d3}\\
+    n^{\frac{1-c_2}{2}}\min_{i=1,\cdots, q}|\beta_i|&\geq M_3,\label{d4}
+\end{align}
+
+ \begin{proposition}[Finite $2k$th moment]
+ \label{th:2k}
+ Assume $\varepsilon_i$, for $i=1,\cdots, n$, are i.i.d. random variables with a finite $2k$th moment,that is, $E(\varepsilon_i)^{2k}<\infty$, for an integer $k>0$, and the design matrix satisfies the strong irrepresentable condition and (\ref{d1})–(\ref{d4}). For $p=o(n^{(c_2-c_1)k})$, and any $\lambda$ that satisfies $\lambda/\sqrt{n} =o( n^{\frac{c_2-c_1}{2}})$ and $p^{-1}(\lambda/\sqrt{n})^{2k}\rightarrow \infty$, assumptions {\it B1–B4} hold.
+ \end{proposition}
+A proof of Proposition \ref{th:2k} can be found in the Supplementary Material. Note that the conditions in Proposition \ref{th:2k} are not more restrictive than those assumed for sign consistency (\citet{Zhao2006}), which suggests that assumptions B1–B4 can be achieved easily under general settings. In particular, for Gaussian noise that has all the moments, the growing rate of $p$ can be relaxed to an exponential rate for selection consistency. Hence, it is possible for assumptions  B1–B4 to be satisfied with exponentially growing $p$ under Gaussian noise. This yields the following result.
+ 
+\begin{proposition}[Gaussian noise]
+Assume $\varepsilon_i$, for $i=1,\cdots, n$, are i.i.d. Gaussian random variables, and that the design matrix satisfies the strong irrepresentable condition and (\ref{d1})-(\ref{d4}). If there exist $0 \leq c_3 <c_2-c_1$ such that $p=O(e^{n^{c_3}})$, for $\lambda \propto n^{\frac{1+c_4}{2}}$ with $c_3<c_4<c_2-c_1$, assumptions 1–B4 hold.
+\end{proposition}
+
+ \section{Simulation Studies}
+ \subsection{Simulation studies for the NMCS}
+ \hspace{4mm}
+We investigate the performance of the NMCS under three types of models: linear regression models, logistic regression models, and GAMs.
+
+As shown in the theorems in Section 3, the sign consistency of the lasso and the theoretical properties of the NMCS and LogP are usually based on $p=o(n^c)$, for some $0<c<1$, for general design matrices and noise distributions. We first run a screening procedure called iterative sure independence screening to reduce the dimensionality of $p$ from a possibly huge scale [say, $\exp\{O(n^{\delta})\}$, for some $\delta>0$] to a scale that is more manageable [e.g., $o(n)$] via a fast and efficient algorithm; see \citet{fan2008} and \citet{fan2010}. The algorithm is implemented using the R package \textit{SIS}. We then construct MCSs using the NMCS and its competitor based on the surviving features. We consider $n=200$, $p=1000$, and $d=n-1=199$ for the linear and GLM simulations.
+
+\subsubsection{Linear regression}
+
+For a linear regression, we compare the performance of the NMCS and the MCB method of \citet{Li2019} under the same simulation setting.
+
+The covariates are generated under one of the following cases:\\
+Case 1: $x_1, \cdots, x_p$ are i.i.d. N(0, 1) random variables.\\
+Case 2: $x_1, \cdots, x_p$ are jointly Gaussian, marginally distributed as N(0, 1), and have the correlation
+structure ${\rm cor}(x_i, x_j) = 0.5^{|i-j|}$.\\
+Case 3: $x_1, \cdots, x_p$ are jointly Gaussian, marginally distributed as N(0, 1), and have the correlation
+structure ${\rm cor}(x_i, x_j) = 0.5$, for $i\neq j$.
+ 
+Case 1 is a simple case for variable selection. Case 2 has an exponential decay correlation structure between the predictors, and Case 3 has a constant correlation as $|i-j|$ increases. These simulation cases are adapted from Li {\it et al.} (2018), \citet{fan2008}, and \citet{fan2011}. 
+
+The true parameters are such that $\beta_1$, $\beta_2$, and $\beta_3$ are generated randomly as $(5\log n/\sqrt{n}+|Z|)U$, with $Z\sim N(0,1)$,
+$U$ independent of $Z$ with ${\rm P}(U=1)=0.4$ and ${\rm P}(U=-1)=0.6$, and $\beta_j=0$ for $j>3$.
+
+After generating the covariates are generated, we generate the responses using $y_i= \sum_{j=1}^p \beta_j x_{ij}+ \epsilon_{i}$, where $i=1, \cdots, n$ and $\epsilon_i \sim N(0, 1)$. The NMCS and MCB are both based on a BIC-tuned adaptive lasso (ALasso) and $B=500$ bootstrap samples. We also record the simulated coverage probability and mean width of the MCSs, and use $P^{*}$ to denote the empirical probability (based on the simulation runs) that $\hat{M}=M_{\rm opt}$. The results are shown in Table 1 in the Supplementary Material. 
+
+In all simulation runs, the true predictors $x_1$, $x_2$, $x_3$ were successfully selected by the initial screening. We compare the NMCS with the MCB method of \citet{Li2019} in terms of both the empirical coverage probability (CP) and average width (AW) of the MCSs. The CP for both methods are very similar in all cases, and are higher than the nominal confidence level (CL). Comparing AW, the NMCS has a smaller width when the CL is large or the covariates are correlated (under Cases 2 and 3, respectively), which suggests that the NMCS is more efficient in these cases. Furthermore, the NMCS is more 
+stable than the MCB in terms of keeping smaller values of AW in all cases. For example, when the AW of the MCB is larger than 10, the NMCS has a significant advantage. 
+Note that the construction of the MCB uses only the single selected model, whereas the NMCS records and uses all the models in the full solution path of the shrinkage model selection, which explains the advantage of the NMCS. 
+
+
+
+\subsubsection{Logistic regression}
+
+We consider covariates generated under Cases 1, 2, and 3 described in the previous subsection. We then simulate the response variable, $Y$, from a Bernoulli distribution with the probability of success $p(x))$ such that $\log[p(x)/\{1-p(x)\}]=x'\beta$. In this case, the NMCS is constructed using the BIC-tuned ALasso with $B=500$ bootstrap samples.
+
+The results, based on $K=200$ simulation runs, are presented in Table 2. Here, the initial screening did not fully preserve all of the true predictors under Cases 2 and 3. Therefore, we record the frequency when the screening preserves all of the true predictors in $K= 200$ simulation runs as ``SIS\_rate."  Unlike in the linear case, there are no existing methods for a comparison. The CP is above the nominal CL under Cases 1 and 2. Under Case 3, the CP of the $95\%$ NMCS is lower than 0.95; however, in all runs in which the initial screening protects all the true predictors, the ``conditional CP"($0.905/0.970=0.933$) meets the nominal CL. Furthermore, the accuracy of the selected model, $P^*$, is not close to one in any of the three cases, but the NMCS still performs satisfactory, showing that the performance of the NMCS is not sensitive to the accuracy of the selected model, as suggested by Theorem \ref{th:nmcs}. 
+In addition, the AW decreases with the CL, which is reasonable.
+
+
+\subsubsection{GAM}
+
+In this case, the covariates are generated under the following setting:\\
+Case 4: $\{x_k\}_{k\neq 2}$ are i.i.d. N(0, 1) random variables, where $x_2=-(1/3)x_1^3+\tilde{\epsilon}$ and $\tilde{\epsilon} \sim N(0,1)$. The true parameters are $\beta_1=\beta_2=\beta_3=1$ and $\beta_{j}=0$, for $j>3$.
+
+The responses are generated under the model $y_i=\sum_{j=1}^p \beta_j x_{ij}+\epsilon$, where $\epsilon \sim N(0,1)$ and is independent of $\tilde{\epsilon}$. Note that, in this case, ${\rm E}(Y|x_1)$ and ${\rm E}(Y|x_2)$ are nonlinear about $x_1$ and $x_2$, respectively. We use GAMSEL (\citet{Chouldechova2015}) with $m_j=6$ basis functions and three degrees of freedom as the GAM selection method, which can be implemented using the R package \textit{gamsel}. Because GAMSEL estimates significantly more parameters than the GLM does, the consistency of GAMSEL is more difficult to establish in the ultra-high-dimensional case. Hence, we consider a relatively high–dimensional case with $p=30$ for the GAM simulation, without initial screening. The bootstrap sample size is $B=400$.
+
+The results, based on $K=100$ simulation runs, are presented in Table 3. Again, there are no existing methods available for a comparison, but the CP meets the nominal CL; the AW decreases with the CL, but the scale of the decrease is much smaller than those observed in Tables 1 and 2. 
+
+
+
+\subsection{Simulation study for LogP}
+\hspace{4mm}
+The LogP measure is conceptually and computationally easier under all three types of models. Thus, as an example, we present simulation results on the performance of LogP for a linear model selection under Case 1 of Section 4.1.1. We consider $\delta=10^{-4}$, $n=(50,100,200,500)$, $p=\lfloor n^{3/4}\rfloor$, and $B=(500,1000)$.
+
+A performance measure for LogP estimation is the percentage relative bias, defined as
+$\%{\rm RB}=100\times[\{{\rm E}(\widehat{\rm LogP})-{\rm LogP}\}/{\rm LogP}]$,
+where ${\rm LogP}$ is the simulated true LogP, that is, the logarithm of the empirical probability, based on the simulation runs, that $\hat{M}\neq M_{\rm opt}$, and ${\rm E}(\widehat{\rm LogP})$ is the mean of the LogP estimator, also based on the simulation runs. Another performance measure is the coefficient of variation, defined as
+${\rm CV}={\rm s.d.}(\widehat{\rm LogP})/|{\rm E}(\widehat{\rm LogP})|$,
+where ${\rm s.d.}(\widehat{\rm LogP})=\{{\rm var}(\widehat{\rm LogP})\}^{1/2}$ and ${\rm var}(\widehat{\rm LogP})$ is the variance of $\widehat{\rm LogP}$ based on the simulation runs.
+
+We consider LogP for BIC-tuned lasso, ALasso, and SCAD selections. The mean of the estimated LogP and the corresponding RB\% and CV, based on $K=200$ simulation runs, are presented in Table 4, where $P^{*}$ denotes the empirical probability (based on the simulation runs) that $\hat{M}=M_{\rm opt}$.
+
+In terms of the \%RB, the SCAD performs satisfactorily. In general, the performance in terms of \%RB is considered satisfactory if it is a single-digit or low double-digit number (10s or 20s). The SCAD and ALasso perform satisfactorily when $p$ is relatively small ($<100$). However, the performance of the lasso is not satisfactory. This may be because the SCAD and ALasso provide more accurate estimators of the model parameters. It is known (\citet{fan2001,zou2006}) that SCAD and ALasso estimators have the oracle property, whereas the lasso estimator is consistent under more restrictive conditions.
+
+In addition, for ALasso, the performance of $\widehat{\rm LogP}$ is satisfactory, as long as $P^{*}$ is not very close to one. As noted in \citet{Liu2021}, the LogP measure is more useful when ${\rm P}(\hat{M}=M_{\rm opt})$, that is, the probability of choosing the optimal model using the model selector, is not very close to one (because in the latter case, there is not much uncertainty associated with the model selection). Thus, practically, the performance of $\widehat{\rm LogP}$ for ALasso is considered satisfactory for the cases that matter.
+
+Overall, the simulation results show some interesting differences between the three most popular shrinkage selection/estimation procedures, namely, the lasso, ALasso, and SCAD, that seemingly favor the ALasso and SCAD.
+
+
+
+\section{Real–data examples}
+\hspace{4mm}
+We provide two real-data examples to illustrate the proposed measures of uncertainty for model selection. The first example is under a linear model setting, and the second is under a logistic regression framework.
+\subsection{NDD1 data analysis}
+\hspace{4mm}
+\cite{Conlon2003} discussed a motif regression problem. The objective is to find binding sites in DNA sequences of an NDD1 transcriptional activator (TA) that is essential for the expression of a set of late-S-phase-specific genes. The binding sites are called motifs and are short sequences of the DNA codes $A, C, G$, and $T$. The number of candidate motifs is $p=100$, and the number of DNA segments in the data is $n=66$. The response $y$ is the measurement of the binding intensity of the NDD1 activator on the DNA segments. The variable $x_j$ is a measure of the abundance score of candidate motif $j$ in the DNA segment. We can fit a linear regression model using $y$ and $x_j$. We first run sure independence screening (\citet{fan2008}) to reduce the dimension to $d=n-1=65$, and then compute the NMCS, MCB (\citet{Li2019}), and LogP measures using the surviving predictors.
+
+Here, as model selection methods, we use ALasso with the tuning parameter chosen using the BIC (ALasso-BIC) or 10-fold cross-validation (ALasso-CV), and select the most parsimonious model within
+one standard error of the minimum (\citet{Hastie2001}). The results are presented in Table 5, and show that although the selected model $\hat{M}$ varies depending on the tuning methods, almost all of the $95\%$ confidence intervals contain all of the models selected using the various methods. Here, NULL means an empty set, that is, no predictor is selected. Comparing the widths of the confidence sets, the NMCS is more efficient than the MCB at the chosen CLs. The model with predictors \{1, 4, 5, 80\} is included in almost all confidence sets, suggesting that these motifs may be the binding sites of the TA. Other motifs in the UBM of the $95\%$ NMCS cannot be excluded at the $95\%$ CL. hence, additional data are required to further investigate the effects of these motifs. These results support those of \citet{Pang2016}, who found that the first and fourth motifs contain the consensus pattern
+from the Saccharomyces Genome Database (\citet{ch2008}).
+
+
+
+\subsection{South African heart disease data}
+\hspace{4mm}
+\citet{Hastie2001} considered a data set on heart disease in South African men. The data include 462 observations. Some
+potential predictors are considered and indexed by $1,\cdots,9$, indicating
+systolic blood pressure (\texttt{sbp}), cumulative tobacco (in kg; \texttt{tobacco}), low density lipoprotein cholesterol (\texttt{ldl}), amount of fat found in adipose tissue (\texttt{adiposity}), family history of heart disease (\texttt{famhist}), type-A behavior rating (\texttt{typea}), obesity score (\texttt{obesity}), current alcohol consumption (\texttt{alcohol}), and age at onset (\texttt{age}), respectively. The responses are binary indicators of whether or not the person had heart disease. 
+
+We apply the NMCS and the LogP measures to those data. Available methods for a shrinkage selection/estimation under a GLM setting include the lasso and ALasso (see Section 4.1.2). The results are presented in Table 6. Although the selected model, $\hat{M}$, varies depending on the selection criteria, almost all of the $95\%$ confidence sets contain all of the selected models. For example, the 95\% NMCS of the AIC-tuned lasso includes all of the models selected by any of the six methods, that is, the lasso or ALasso tuned using the AIC, BIC, or CV. The widths of the NMCS and the values of LogP indicate the uncertainty of different selection methods. The smaller LogP of the BIC-tuned ALasso suggests that its selected model, $\{2,3,5,6,9\}$, is more likely to be the optimal model. The narrower NMCS of the CV-tuned ALasso suggests there is less variation among the selected models. Furthermore, the ALasso methods have smaller errors and less variation than the lasso methods do. Thus, we may favor a model selected using BIC-tuned ALasso or CV-tuned ALasso, depending on whether we need to reduce the error or the variation.  The model with predictors \{\texttt{tobacco}(2), \texttt{ldl}(3), \texttt{famhist}(5), \texttt{age}(9)\} is included in all confidence sets, indicating the importance of these predictors in terms of explaining heart disease. The importance of the predictors \texttt{sbp}(1), \texttt{typea}(6), and \texttt{obesity}(7) requires further investigation. These conclusions are consistent with those of Hastie {\it et al.} (2001), in which the model $\{2, 3, 5, 9\}$ is selected under a GLM setting, and \texttt{sbp}(1) and \texttt{obesity}(7) have nonlinear effects that can be added to the model under a GAM setting.
+
+% Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+
+
+\section{Conclusion}
+We have proposed two measures of uncertainty for shrinkage model selection procedures that can be used in high–dimensional cases ($p$ grows at a polynomial/exponential rate) and for more general classes of models. The NMCS is obtained by trimming the EO of the variables in the solution paths when the tuning parameter decreases. We prove that, under some general conditions, the optimal model is contained in the NMCS at least at a probability that is close to the nominal CL, if the model selection method and the parameter estimators are consistent. Our simulations show that the empirical coverage probabilities of the NMCS meet the nominal CLs even when the covariates are highly correlated and $p$ is much larger than $n$ (decreased to $n-1$ by using initial screening). Compared with other MCS methods, such as the MAC (\citet{Liu2021}) and MCB (\citet{Li2019}), the NMCS has advantages in terms of applicability and efficiency.  Another measure, LogP, measures the error of a (single) selected model by estimating the logarithm of the probability that the selected model is different from the optimal model. The LogP estimator based on bootstrap probabilities is consistent under some weak conditions. The results of simulation studies show that the LogP estimator has satisfactory accuracy when the selected model exhibits relatively large to modest uncertainty (the probability that the selected model is the true model is between 0.5 and 0.98; see Table 4).
+
+The proposed measures can be used to signal the uncertainty of a selected model by checking the width of the NMCS (a larger width means higher ``variance") and the value of LogP (a smaller value means less ``bias"). A comparison of these measures for different model selection methods using simulation data and real data shows that the ALasso and SCAD penalty generate selected models with less ``bias" than those selected using the lasso penalty. In addition, the selected models tuned using the cross-validation with the one standard error rule have lower ``variance" than those tuned using AIC/BIC. These findings are useful when considering which selection method to use, and even whether model selection makes sense, given the level of uncertainty associated with the data.
+
+Furthermore, the nested property of the NMCS provides sufficient options for choosing a model, from relatively parsimonious models to more conservative and higher-dimensional models, with a given CL. In some areas with expensive data collection, such as 
+experimentation data, the NMCS tells us which of the covariates are most important covariates (those in the LBM), as well as identifying some potential important (those in the UBM but not included in the LBM) with a probability guarantee. Here, potential applications include speeding up the drug development process and helping to allocate a budget efficiently.
+
+
+\label{lastpage}
+
+%  The \backmatter command formats the subsequent headings so that they
+%  are in the journal style.  Please keep this command in your document
+%  in this position, right after the final section of the main part of 
+%  the paper and right before the Acknowledgements, Supplementary Materials,
+%  and References sections. 
+
+%  This section is optional.  Here is where you will want to cite
+%  grants, people who helped with the paper, etc.  But keep it short!
+\section*{Supplementary Material}
+
+A web appendix, referenced throughout the manuscript, contains technical proofs and tables and is available online.\vspace*{-8pt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Acknowledgements}
+
+The research of Jiming Jiang was supported by the NSF of the United States, grants DMS-1713120 and DMS-1914465. The authors are grateful to the associate editor and two referees for their helpful comments and suggestions.
+
+\par
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibhang=1.7pc
+\bibsep=2pt
+\fontsize{9}{14pt plus.8pt minus .6pt}\selectfont
+\renewcommand\bibname{\large \bf References}
+%\begin{thebibliography}{11}
+\expandafter\ifx\csname
+natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL}\fi
+%% use bibfile 
+% \bibliographystyle{chicago}      % Chicago style, author-year citations
+%  \bibliography{bibfile}   % name your BibTeX data base
+
+
+%%  Another method
+\begin{thebibliography}{}
+
+\bibitem[Akaike(1973)]{1973}
+Akaike, H. (1973), Information theory as an extension of the maximum likelihood
+principle, in {\it Second International Symposium on Information Theory} (B. N. Petrov and F. Csaki eds.), pp. 267–281 (Akademiai Kiado, Budapest).
+
+\bibitem[Chen et al.(2008)]{ch2008}
+Chen, X., Guo, L., Fan, Z., and Jiang, T. (2008). W-AlignACE: an improved Gibbs sampling algorithm
+based on more accurate position weight matrices learned from sequence and gene expression/ChIP-chip
+data. {\it Bioinformatics} 24, 1121–1128.
+
+\bibitem[Chouldechova and Hastie(2015)]{Chouldechova2015}
+Chouldechova, A. and Hastie, T. (2015), Generalized Additive Model Selection, {\it arXiv} 1506.03850.
+
+\bibitem[Conlon et al.(2003)]{Conlon2003}
+Conlon, E., Liu, X., Lieb, J., and Liu, J. (2003), Integrating regulatory motif discovery and genome-wide expression analysis, {\it Proc. Natl Acad. Sci.} 100, 3339--3344.
+
+\bibitem[Demmler and Reinsch(1975)]{Demmler1975}
+Demmler, A. and Reinsch, C. (1975). Oscillation matrices with spline smoothing. {\it Numerische Mathematik} 24.
+
+\bibitem[Efron et al.(2004)]{efron2004}
+Efron, B., Hastie, T., Johnstone, I., and Tibshirani, R. (2004). Least angle regression.{\it Annals of Statistics} 32(2), 407–499.
+
+\bibitem[Efron and Tibshirani(2007)]{efron2007}
+Efron, B. and Tibshirani, R. (2007), On testing the significance of sets of genes, {\it Ann. Appl. Statist.} 1 107–129.
+
+\bibitem[Fan and Li(2001)]{fan2001}
+Fan, J. and Li, R. (2001), Variable selection via nonconcave penalized likelihood and its oracle properties, {\it J. Amer. Statist. Assoc.} 96, 1348--1360.
+\bibitem[Fan and Li(2008)]{fan2008}
+Fan, J. and Li, J.(2008), Sure independence screening for ultrahigh
+dimensional feature space, {\it J. R. Statist. Soc. B} 70, Part 5, pp. 849–911.
+\bibitem[Fan and Song(2010)]{fan2010}
+Fan J, Song R (2010). Sure Independence Screening in Generalized Linear Models with NPDimensionality. {\it Ann. Statist.} 38(6), 3567–3604.
+\bibitem[Fan et al.(2011)]{fan2011}
+Fan, J., Yang, F., Song, R.(2011), Nonparametric Independence Screening in Sparse Ultra-High-Dimensional Additive Models, {\it J. Amer. Statist.
+Assoc.}, 106:494, 544-557.
+\bibitem[Ferrari and Yang(2015)]{Ferrari2015}
+Ferrari, D. and Yang, Y. (2015), Confidence sets for model selection by F-testing,
+{\it Statistica Sinica} 25, 1637--1658.
+\bibitem[Fu, Carroll and Wang(2005)]{Fu2005}
+Fu, W. J., Carroll, R. J., and Wang, S. (2005). Estimating misclassification error with small samples via bootstrap cross-validation. Bioinformatics (Oxford, England), 21(9), 1979–1986.
+\bibitem[Hansen et al.(2011)]{Hansen}
+Hansen, P. R., Lunde, A. and Nason, J. M. (2011), The model confidence set, {\it
+Econometrica} 79, 453--497.
+\bibitem[Hastie and Tibshirani(1986)]{Hastie1986}
+Hastie, T. and Tibshirani, R. (1986). Generalized additive models. {\it Statistical science} 297-310.
+\bibitem[Hastie, Tibshirani, and Friedman(2001)]{Hastie2001}
+Hastie, T., Tibshirani, R., and Friedman, J. (2001), {\it The Elements of Statistical
+Learning: Data Mining, Inference, and Prediction}, Springer, New York.
+\bibitem[Jiang and Nguyen(2016)]{Jiang2016}
+Jiang, J. and Nguyen, T. (2016), {\it The Fence Methods}, World Scientific, Singapore.
+
+\bibitem[Li et al.(2019)]{Li2019}
+Li, Y., Luo, Y.,  Ferrari, D.,  Hu, X.  and Qin, Y. (2019), {\it Model confidence bounds for variable selection}, Biometrics, Volume75, Issue2, 392-403.
+\bibitem[Lin, and Zhang(2006)]{Lin2006}
+Lin, Y., Zhang, H. H. (2006). Component selection and smoothing in multivariate nonparametric
+regression. {\it Ann. Statist} 34, 2272-2297.
+\bibitem[Liu, Li and Jiang(2021)]{Liu2021}
+Liu, X., Li, Y. and Jiang, J. (2021), Simple measures of uncertainty for model selection, {\it TEST}, 1-20.
+\bibitem[Lubke and Campbell(2016)]{Lubke2016}
+Lubke,  G. H. and Campbell, I. (2016),  Inference based on the best-fitting
+model can contribute to the replication crisis: Assessing model selection
+uncertainty using a bootstrap approach, {\it Struct. Equ. Modeling} 23,
+479--490.
+\bibitem[Lubke et al.(2017)]{Lubke2017}
+Lubke, G. J., Campbell, I., McArtor, D., Miller, P., Luningham, J., and
+van den Berg, S. M. (2017), Assessing model selection uncertainty using a bootstrap approach: An update, {\it Struct. Equ. Modeling} 24, 230--245.
+\bibitem[Meier, Geer and Buhlmann(2009)]{Meier2009}
+Meier, L., Geer, S., Buhlmann, P. (2009). High-dimensional additive modeling. {\it Ann. Statist.} 37, 3779-3821.
+\bibitem[Pang, Lin and Jiang(2016)]{Pang2016}
+Pang, Z., Lin, B. and Jiang, J. (2016), Regularisation Parameter Selection Via Bootstrapping. {\it Aust. N. Z. J. Stat.}, 58: 335-356. 
+\bibitem[Ravikumar et al.(2009)]{Ravikumar2009}
+Ravikumar, P. D., Liu, H., Lafferty, J. D. and Wasserman, L. A. (2009). SpAM: Sparse Additive Models. {\it  J. R. Statist. Soc. B} 71, Part 5, pp. 1009–1030
+
+\bibitem[Schwarz(1978)]{Schwarz}
+Schwarz, G. (1978), Estimating the dimension of a model, {\it Ann. Statist.} 6, 461--464.
+\bibitem[Subramanian et al.(2005)]{Subramanian}
+Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L., Gillette, M. A., Paulovich, A., Pomeroy, S. L., Golub, T. R., Lander, E. S. and Mesirov, J. P. (2005), Gene set enrichment analysis: A knowledge-based approach for interpreting genome-wide expression profiles, {\it Proc. Natl. Acad. Sci. USA} 102, 15545--15550.
+\bibitem[Tibshirani(1996)]{Tibshirani1996}
+Tibshirani, R. J. (1996), Regression shrinkage and selection via the Lasso, {\it J. Roy. Statist. Soc. Ser. B} 16, 385–-395.
+\bibitem[Thomson, Bruckner and Bruckner(2008)]{Thomson2008}
+Thomson, B. S., Bruckner, J. B. and Bruckner, A. M. (2008), {\it Elementary Real Analysis}, 2nd ed., Prentice-Hall.
+\bibitem[Wang, Li and Leng(2009)]{wang2009}
+Wang, H., Li, B., and Leng, C. (2009). Shrinkage Tuning Parameter Selection with a Diverging Number of Parameters. Journal of the Royal Statistical Society. Series B (Statistical Methodology), 71(3), 671–683. 
+\bibitem[Zhao and Yu(2006)]{Zhao2006}
+Zhao, P. and Yu, B (2006),  On Model Selection Consistency of Lasso, {\it Journal of Machine Learning Research} 7, 2541--2563.
+\bibitem[Zheng, Ferrari and Yang(2019)]{Zheng2019}
+Zheng, C., Ferrari, D. and Yang, Y. (2019), Model selection confidence sets
+by likelihood ratio testing, {\it Statistica Sinica}, in press.
+\bibitem[Zou(2006)]{zou2006}
+Zou, H. (2006), The adaptive Lasso and its oracle properties, {\it J. Amer. Statist. Assoc.} 101, 1418--1429.
+
+
+\end{thebibliography}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\vskip .65cm
+\noindent
+Department of Statistics, University of California, Davis, U.S.A.
+%\vskip 2pt
+\noindent
+E-mail: yynli@ucdavis.edu
+\vskip 2pt
+
+\noindent
+Department of Statistics, University of California, Davis, U.S.A.
+%\vskip 2pt
+\noindent
+E-mail: jimjiang@ucdavis.edu
+
+
+% \vskip .3cm
+%\centerline{(Received ???? 20??; accepted ???? 20??)}\par
+\end{document}

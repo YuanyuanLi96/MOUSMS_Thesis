@@ -1,0 +1,452 @@
+\documentclass[10pt]{book}
+\usepackage[sectionbib]{natbib}
+\usepackage{array,epsfig,fancyheadings,rotating}
+\usepackage[dvipdfm]{hyperref}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textwidth=31.9pc
+\textheight=46.5pc
+\oddsidemargin=1pc
+\evensidemargin=1pc
+\headsep=15pt
+%\headheight=.2cm
+\topmargin=.6cm
+\parindent=1.7pc
+\parskip=0pt
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\setcounter{page}{1}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{proposition}{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+%\newtheorem{proof}{Proof}
+\newtheorem{example}{Example}
+\newtheorem{remark}{Remark}
+\pagestyle{fancy}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{fancy}
+\def\n{\noindent}
+\lhead[\fancyplain{} \leftmark]{}
+\chead[]{}
+\rhead[]{\fancyplain{}\rightmark}
+\cfoot{}
+
+\usepackage{chngcntr}
+
+\counterwithin*{equation}{section}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\baselinestretch}{2}
+
+\markright{ \hbox{\footnotesize\rm Statistica Sinica: Supplement
+%{\footnotesize\bf 24} (201?), 000-000
+}\hfill\\[-13pt]
+\hbox{\footnotesize\rm
+%\href{http://dx.doi.org/10.5705/ss.20??.???}{doi:http://dx.doi.org/10.5705/ss.20??.???}
+}\hfill }
+
+\markboth{\hfill{\footnotesize\rm Yuanyuan Li AND Jiming Jiang} \hfill}
+{\hfill {\footnotesize\rm FILL IN A SHORT RUNNING TITLE} \hfill}
+
+\renewcommand{\thefootnote}{}
+$\ $\par \fontsize{12}{14pt plus.8pt minus .6pt}\selectfont
+
+\def\bSig\mathbf{\Sigma}
+\newcommand{\VS}{V\&S}
+\newcommand{\tr}{\mbox{tr}}
+\newcommand{\argmin}{\mathop{\mathrm{argmin}}\limits}
+\newcommand{\argmax}{\mathop{\mathrm{argmax}}\limits}
+\newcommand{\dmax}{\mathop{\mathrm{max}}\limits}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+ \centerline{\large\bf Measures of Uncertainty for Shrinkage Model Selection}
+\vspace{2pt}
+\centerline{Yuanyuan Li and Jiming Jiang} 
+\vspace{2pt}
+ \centerline{\it Department of Statistics, University of California, Davis, U.S.A.}
+\vspace{.55cm}
+ \centerline{\bf Supplementary Material}
+\fontsize{9}{11.5pt plus.8pt minus .6pt}\selectfont
+\noindent
+
+\setcounter{section}{0}
+\setcounter{equation}{0}
+\def\theequation{S\arabic{section}.\arabic{equation}}
+\def\thesection{S\arabic{section}}
+
+\fontsize{12}{14pt plus.8pt minus .6pt}\selectfont
+
+\section{EO when coefficients paths cross zero}
+As $\lambda$ decreases, some non-zero coefficients could be zero again, which happens when some variables are highly correlated so that a later entering variable changes the coefficient path of an early entering one. In this situation, the order of those highly correlated variables in EO actually doesn't matter too much since their orders could just be formed by chance. To protect the nested property of NMCS, we have modified the steps of constructing the EO by separating it into two steps. First, we find the EO of the variables in the selected model $\hat{M}$, and the orders are defined by their first time of becoming non-zero when $\lambda$ decreases from a large value to $\hat{\lambda}$; then we decide the entering order of the rest variables based on a grid of $\lambda$ values decreasing from $\hat{\lambda}$ to 0, and add these variables to EO in order. Note that when $\lambda$ is zero, Lasso estimates will be the same as the least square estimates so that all variables will be active.
+
+Overall, this modification doesn't change the original EO (defined by the initial entering order of each variable as $\lambda$ decreases) most of the time. It can be seen that only when a variable enters the active set and stays inactive until $\lambda$ decreases to the selected $\hat{\lambda}$, the order of this variable changes (increases) to the order where it re-enters the model when $\lambda$ further decreases from $\hat{\lambda}$ to $0$. Such an order change event rarely happens; for example, it did not happen at all in our simulation studies and real data analyses, although, in theory, it can still happen. Specifically, the order change will never happen if Lasso paths are monotone. \citet{efron2004} provides a necessary and sufficient condition for the monotonicity of the Lasso paths: let $X_A$ denote a subset of $A$ columns of the design matrix $X$, each multiplied by a set of arbitrary signs $s_1, s_2, . . . s_{|A|}$, and let $S_A$ be a diagonal matrix of the $s_j$ values,
+\begin{eqnarray}
+S_A(X_A^TX_A)^{-1}S_A\mathbf{1} \geq 0, \ \forall A \in {1,\cdots, p}, S_A.
+\end{eqnarray}
+where the inequality is understood as element-wise. This means that for all subsets of predictors, the inverse covariance matrix is always diagonally dominant, i.e., each diagonal element in the inverse covariance matrix is at least as large as the sum of the other elements in its row. This is a weak assumption about the correlation of the covariates in $X$. See \citet{hastie2007} for more discussions about the monotonicity of the Lasso paths. 
+
+To summarize, the order change of EO brings some complexity of obtaining EO empirically. We modified the EO computation in this section to accommodate this special case, but still keeps the necessary structure of EO and NMCS. It can be seen that the theoretical property of NMCS in Theorem 1 is still valid even when order changes happen. In most cases when covariates are not highly correlated, the order change will not happen, and the modified EO is the same as original EO, which is defined by the first time a variable enters model.
+
+\section{Proof of Proposition 1}
+Under the conditions above, the solution to the LASSO problem (2.2) is 
+ \begin{eqnarray}
+ \hat{\beta}_j =\text{sign}(\hat{\beta}_j^0)\bigg(|\hat{\beta}_j^0|-\frac{\lambda}{2n}\bigg)^+,\label{solution:lasso}
+ \end{eqnarray}
+ $j=1, \cdots, p$, where $\hat{\beta}^0= (\hat{\beta}_1^0, \cdots, \hat{\beta}_{p}^0)'$ is the ordinary least square estimator of $\beta$, and $x^+ = \max(x,0)$. Without loss of generality, let $\sigma^2=1$, $\{\hat{\beta}_i^0\}_{i= 1,\cdots, p}$ are independent random variables with distribution $N({\beta}_i, n^{-1})$. We next prove that the NMCS based on Lasso satisfies assumption {\it A2}.
+ 
+ By \citet{portnoy}, if $p(\log p)/n \rightarrow 0$, $||\hat{\beta}^0-\beta||^2=O_{\rm P}(p/n)$. Hence, for any $\varepsilon >0$, there is a constant $M>0$ and constant $N>0$ such that for $n \geq N$,
+ \begin{eqnarray}
+ 1-\varepsilon &\leq& {\rm P}\bigg(||\hat{\beta}^0-\beta||^2 \leq \frac{Mp}{n}\bigg)\leq {\rm P}\bigg(\max_{0\leq j \leq p}|\hat{\beta}_j^0-\beta_j|\leq \sqrt{\frac{Mp}{n}}\bigg)\nonumber\\
+&=& {\rm P}\bigg(\bigcap_{0\leq j \leq p}\Big\{|\hat{\beta}_j^0-\beta_j|\leq \sqrt{\frac{Mp}{n}}\Big\}\bigg)\label{ols}
+ \end{eqnarray}
+
+Let $z_1=\min_{i=1,\cdots,q}|\hat{\beta}^0_i|$, $z_2=\max_{q+1, \cdots,p} |\hat{\beta}^0_i|$.
+Since  $\sqrt{Mp/n}\\< 1/2 \min_{i=1, \cdots, q}|\beta_i|$ for large n, we get ${\rm P}(z_1>z_2)\rightarrow 1$ as $n \rightarrow \infty$. By (\ref{solution:lasso}), we can get case-by-case selection results according to the value of $\lambda$. If $\lambda  \geq 2n z_1$, an underfitting is chosen;  $2nz_1>\lambda \geq 2nz_2$, the optimal model ($\beta_1, \cdots, \beta_q \neq 0$) is chosen; $2n z_2>\lambda$, an overfitting model will be chosen. Denotes the left side of (3.11) in assumption {\it A2} as $\triangle$, and $\psi_{\rm opt}=(\beta_{(q)}^T, 0^T)^T$, where $\beta_{(q)}$ is $q$-vector with nonzero coefficients.
+ 
+For $w=0$, $j=0$, any fixed vector $\tilde{\psi}_{\rm opt}=(\tilde{\beta}_{(q)}^T,0^T)^T$, we have ${\rm P}(M_{\rm opt}= \hat{M}^{*}|M_{\rm opt},\tilde{\psi}_{\rm opt})= {\rm P}( 2nz_1>\lambda \geq 2nz_2\big|M_{\rm opt},\tilde{\psi}_{\rm opt} )= {\rm P}( 2nz_1>\lambda|\big|M_{\rm opt},\tilde{\psi}_{\rm opt} )\\ \times {\rm P}( \lambda \geq 2nz_2\big|M_{\rm opt},\tilde{\psi}_{\rm opt} )$. 
+\begin{eqnarray}
+{\rm P}(2nz_1>\lambda\big| M_{\rm opt},\tilde{\psi}_{\rm opt})
+&=&\prod_{l=1}^q\Big({\rm P}(\sqrt{n}(\hat{\beta}^0_i-\tilde{\beta}_i)>\lambda/(2\sqrt{n}) -\sqrt{n} \tilde{\beta}_i)\nonumber\\
+&&+{\rm P}(\sqrt{n}(\hat{\beta}^0_q-\tilde{\beta}_q)<-\lambda/(2\sqrt{n}) -\sqrt{n} \tilde{\beta}_q)\Big)\nonumber\\
+&=&\prod_{l=1}^q\Big(1-\Phi(\lambda/(2\sqrt{n})- \sqrt{n}\tilde{\beta}_i)+\Phi(-\lambda/(2\sqrt{n})\nonumber\\
+&&-\sqrt{n}\tilde{\beta}_i)\Big)\nonumber\\
+&=&1-\Phi_q\Big(\frac{\lambda}{2\sqrt{n}}- \sqrt{n}\tilde{\beta}_{(q)})+\Phi_q(-\lambda/(2\sqrt{n})\nonumber\\
+&&-\sqrt{n}\tilde{\beta}_{(q)}\Big),\label{type1}
+\end{eqnarray}
+\begin{eqnarray}
+{\rm P}(\lambda\geq2nz_2\big| M_{\rm opt},\tilde{\psi}_{\rm opt})&=&{\rm P}(\lambda/(2 \sqrt{n})\geq \sqrt{n}|\hat{\beta}^0_{q+1}|\big| M_{\rm opt},\tilde{\psi}_{\rm opt})\cdots \nonumber\\
+&&{\rm P}(\lambda/(2\sqrt{n})\geq \sqrt{n}|\hat{\beta}^0_{p}
+|\big| M_{\rm opt},\tilde{\psi}_{\rm opt})\nonumber\\
+&=&\prod_{l=q+1}^p {\rm P}( -\lambda/(2\sqrt{n}) \leq \sqrt{n}\hat{\beta}^0_{l}\leq \lambda/(2\sqrt{n}))\nonumber\\
+&=&\prod_{l=q+1}^p \big(\Phi(\lambda/(2\sqrt{n}))-\Phi(-\lambda/(2\sqrt{n})) \big)\nonumber\\
+&\leq& 1.\label{type2}
+\end{eqnarray}
+Then we have
+\begin{eqnarray}
+\triangle&\leq& |\Phi_q(\lambda/(2\sqrt{n})- \sqrt{n}\tilde{\beta}_{(q)})-\Phi_q(\lambda/(2\sqrt{n})- \sqrt{n}\beta_{(q)})| \nonumber \\
+&&+|\Phi_q(-\lambda/(2\sqrt{n})-\sqrt{n}\tilde{\beta}_{(q)})-\Phi_q(-\lambda/(2\sqrt{n})-\sqrt{n}\beta_{(q)})|\nonumber \\
+&=&|d_{+}|+|d_{-}|.
+\end{eqnarray}
+By Taylor expansion, $d_{\pm}=\sqrt{n}\phi_q(\pm \lambda/(2\sqrt{n}) - \sqrt{n}\beta_{(q)\pm})^T(\tilde{\beta}_{(q)}-\beta_{(q)})$, where $\phi(\cdot)$ is the pdf of $N(0,1)$ and applied element-wise, and $\beta_{(q)\pm}$ is between $\beta_{(q)}$ and $\tilde{\beta}_{(q)}$. 
+By $\min_{i=1,\cdots,q}|\beta_i|\geq M_0 n^{\frac{c_1-1}{2}}$,  and $\lambda=O(\sqrt{n})$. For large $n$, we get $|\pm \lambda/(2\sqrt{n}) - \sqrt{n}\beta_{(q)\pm}^{(i)}|\geq M_1 n^{\frac{c_1}{2}} > \sqrt{ \log n}$, $M_1$ is a positive constant. Thus,
+$\phi_q(\pm \lambda/(2\sqrt{n}) - \sqrt{n}\beta_{(q)\pm}^{(i)})=\frac{1}{\sqrt{(2\pi)^q}}\exp\bigg\{-\frac{\big(\pm \lambda/(2\sqrt{n}) - \sqrt{n}\beta_{(q)\pm}^{(i)}\big)^2}{2}\bigg\}
+\leq\frac{1}{\sqrt{(2\pi)^q n}}$
+for large $n$. It follows that $|d_{\pm}| \leq |\tilde{\beta}_{(q)}-\beta_{(q)}|/\sqrt{(2\pi)^q}\leq |\tilde{\beta}-\beta|/\sqrt{(2\pi)^q}$, assumption {\it A2} is satisfied. 
+
+For any $0<w \leq 2p$, $j=0, \cdots, w$, we have
+\begin{eqnarray}
+   &&{\rm P}\bigg[M_{\rm opt}\in(\hat{M}_{-w+j}^{*},\hat{M}_{j}^{*})|M_{\rm opt},\tilde{\psi}_{\rm opt} \bigg]\nonumber\\
+   &=&\sum_{h=-w+j}^j {\rm P}\big(M_{\rm opt}=\hat{M}^*_h|M_{\rm opt},\tilde{\psi}_{\rm opt}\big)\nonumber\\
+    &=&\sum_{h=-w+j}^j \bigg[{\rm P}\big(M_{\rm opt}=\hat{M}^*_h, \hat{M}^* = M_{\{\bf{\beta}=\mathbf{0}\}}|M_{\rm opt},\tilde{\psi}_{\rm opt}\big)\nonumber\\
+    &&+{\rm P}\big(M_{\rm opt}=\hat{M}^*_h, \hat{M}^* = M_{\{\beta_1 \neq0\}}|M_{\rm opt},\tilde{\psi}_{\rm opt}\big)+\cdots \nonumber\\
+    &&+{\rm P}\big(M_{\rm opt}=\hat{M}^*_h, \hat{M}^* = M_{\{\beta_1, \cdots, \beta_p \neq0\}}|M_{\rm opt},\tilde{\psi}_{\rm opt}\big)\bigg]\nonumber\\
+    &=& \sum_{h=-w+j}^j \bigg[{\rm P}\big(\hat{M}^* = M_{(\beta=\mathbf{0})}|M_{\rm opt},\tilde{\psi}_{\rm opt}\big) \times \nonumber \\
+    &&{\rm P}\big(M_{\rm opt}=\hat{M}^*_h|\hat{M}^* = M_{\{\beta=\mathbf{0}\}},M_{\rm opt},\tilde{\psi}_{\rm opt}\big) \nonumber\\
+    &&+ \cdots+{\rm P}\big(\hat{M}^* = M_{\{\beta_1, \cdots, \beta_{p} \neq0\}}|M_{\rm opt},\tilde{\psi}_{\rm opt}\big)
+    \times \nonumber \\
+    &&{\rm P}\big(M_{\rm opt}=\hat{M}^*_h|\hat{M}^* = M_{\{\beta_1, \cdots, \beta_{p} \neq0\}},M_{\rm opt},\tilde{\psi}_{\rm opt}\big)\bigg]\nonumber\\
+    &=& a_0{\rm P}\big( \hat{M}^* = M_{\{\mathbf{\beta}=\mathbf{0}\}}|M_{\rm opt},\tilde{\psi}_{\rm opt}\big)+ \cdots\nonumber\\
+     &&+a_q{\rm P}\big(\hat{M}^* = M_{\{\beta_1, \cdots, \beta_{q} \neq0\}}|M_{\rm opt},\tilde{\psi}_{\rm opt}\big)+\cdots \nonumber\\
+    &&+a_p{\rm P}\big(\hat{M}^* = M_{\{\beta_1, \cdots, \beta_p \neq0\}}|M_{\rm opt},\tilde{\psi}_{\rm opt}\big),\label{A2:last_eq}
+\end{eqnarray}
+where $a_0,\cdots,a_p$ are some constants with values either 0 or 1. The first $q+1$ probabilities in (\ref{A2:last_eq}) have a similar form to (\ref{type1}), while the last $p-q$ probabilities are all constants that do not contain $\tilde{\psi}_{\rm opt}$ similar as (\ref{type2}).  Hence, by repeating previous proof, assumption {\it A2} is satisfied for every $w\geq 0$, $0\leq j \leq w$. 
+
+\section{Proof of Theorem 1}
+Let ${\rm P}^*(\cdot)={\rm P}(\cdot|\hat{M}, \hat{\psi})$. Given $\hat{M}, \hat{\psi}$, by the weak law of large numbers, we have
+\begin{eqnarray}
+    \frac{1}{B}\sum_{b=1}^B 1_{(\hat{M}^*_{x,[b]}=\hat{M} )}\stackrel{\rm P}{\longrightarrow} {\rm P^*}(\hat{M}^*_{x}=\hat{M}),
+\end{eqnarray}
+ as $B\rightarrow\infty$ for any $-p\leq x \leq p$. Define
+ $f(w) = \argmax_{0\leq j \leq w} \sum_{i=0}^{w}{\rm P^*}(\hat{M}^*_{-i+j}=\hat{M})$, and recall that
+ $f^*(w)= \argmax_{0\leq j \leq w} \sum_{i=0}^{w}B^{-1}\sum_{b=1}^{B} 1_{(\hat{M}^*_{-i+j,[b]}=\hat{M} )}$.
+ For any given non-negative integer $w$, $f^*(w)$ converge in probability to $f(w)$, as $B$ increases. Furthermore, it is easy to see that there exits a unique $w$ such that 
+ \begin{eqnarray}
+    {\rm CP}(w-1)&=&\sum_{i=0}^{w-1}{\rm P^*}(\hat{M}^*_{-i+f(w-1)}=\hat{M})<1-\alpha \label{w-1}\\
+   {\rm CP}(w)&=& \sum_{i=0}^{w}{\rm P^*}(\hat{M}^*_{-i+f(w)}=\hat{M})\geq1-\alpha.\label{w}
+ \end{eqnarray}
+ Next we prove that $w^*$ converges in probability to this $w$. If $w^*-w>0$ for all $B$, we have $w \leq w^*-1$, and
+ \begin{align}
+      \sum_{i=0}^{w}{\rm P}^*(\hat{M}^*_{-i+f(w)}= \hat{M})&\leq \sum_{i=0}^{w^*-1}{\rm P}^*(\hat{M}^*_{-i+f(w^*-1)}= \hat{M})\nonumber\\
+       &= \sum_{i=0}^{w^*-1}\frac{1}{B}\sum_{b=1}^B 1_{(\hat{M}^*_{-i+f^*(w^*-1),[b]}= \hat{M})}+o_{\rm P}(1).\label{dis2}
+ \end{align}
+ As $B$ goes to infinity, the $o_{\rm P}(1)$ in (\ref{dis2}) converges to zero in probability. Thus, with probability tending to one, the right side of (\ref{dis2}) is smaller than $1-\alpha$ by the definition of $w^*-1$, which contradicts (\ref{w}). Similarly, if $w^*-w<0$ for all $B$, then $w-1 \geq w^*$, and
+ \begin{align}
+      \sum_{i=0}^{w-1}{\rm P}^*(\hat{M}^*_{-i+f(w-1)}= \hat{M})&\geq \sum_{i=0}^{w^*}{\rm P}^*(\hat{M}^*_{-i+f(w^*)}= \hat{M})\nonumber\\
+       &= \sum_{i=0}^{w^*}\frac{1}{B}\sum_{b=1}^B1_{(\hat{M}^*_{-i+f^*(w^*),[b]}= \hat{M})}+o_{\rm P}(1).\label{dis3}
+ \end{align}
+By a similar argument, with probability tending to one, the right side of (\ref{dis3}) is at least $1-\alpha$ according to the definition of $w^*$, which again results in a contradictory to (\ref{w-1}).
+Thus, $w^*$, $j^*$ [$=f^*(w^*)$] converge to $w$ and $j$ [$=f(w)$] as $B$ goes to infinity, in probability with respect to ${\rm P^*}$.
+It follows that we have
+\begin{eqnarray}
+ 1-\alpha &\leq & \sum_{i=0}^{w^*}\frac{1}{B}\sum_{b=1}^B 1_{(\hat{M}^*_{-i+j^*,[b]}=\hat{M} )}\nonumber\\
+ &=& \sum_{i=0}^{w}{\rm P^*}(\hat{M}^*_{-i+j}=\hat{M})+o_{\rm P}(1)\nonumber\\
+ &\leq& {\rm P}(M_{\rm opt} \in (\hat{M}^*_{-w+j}, \hat{M}^*_{j})|M_{\rm opt},\hat{\psi}_{\rm opt})1_{(\hat{M}=M_{\rm opt})} \nonumber \\
+ &+&1_{(\hat{M}\neq M_{\rm opt})}+o_{\rm P}(1)\label{q1}
+\end{eqnarray}
+where $o_{\rm P}(1)$ converges to $0$ with respect to ${\rm P}^*$ as $B$ goes to infinity. 
+
+Next, by {\it A2}, we have
+\begin{eqnarray}
+&&{\rm P}(M_{\rm opt}\in(\hat{M}_{-w+j}^{*},\hat{M}_{j}^{*})|M_{\rm opt},\hat{\psi}_{\rm
+ opt})\nonumber\\
+ &\leq&{\rm P}(M_{\rm opt}\in(\hat{M}_{-w+j}^{*},\hat{M}_{j}^{*})|M_{\rm opt},\psi_{\rm
+opt})+ c|\hat{\psi}_{\rm opt}-\psi_{\rm opt}|\label{q2},
+\end{eqnarray}
+
+Combining (\ref{q1}) and (\ref{q2}), we have
+\begin{eqnarray}
+\label{prf2:sl}
+ 1-\alpha &\leq & \Big\{{\rm P}\big(M_{\rm opt}\in(\hat{M}_{-w+j}^{*},\hat{M}_{j}^{*})\big)+c|\hat{\psi}_{\rm opt}-\psi_{\rm opt}|\Big\}1_{(\hat{M}=M_{\rm opt})} \nonumber\\
+ &&+ 1_{(\hat{M}\neq M_{\rm opt})}+o_{\rm P}(1),\label{q3}
+\end{eqnarray}
+
+Note that the $o_{\rm P}(1)$ on the right side of (\ref{prf2:sl}) is bounded, because we are dealing with the average of indicator functions. Therefore, by the dominated convergence theorem (e.g., \citet[Theorem 2.16]{jiang}), we have ${\rm E}\{o_{\rm P}(1)\} = o(1)$, where the ${\rm E}$ is with respect to the joint distribution of $y$ and $y^*$, the bootstrapped samples. We now take expectation on both sides of (\ref{q3}), again with respect to the joint distribution of $y$ and $y^*$, we have
+\begin{eqnarray}
+ 1-\alpha &\leq & {\rm P}\big(M_{\rm opt}\in(\hat{M}_{-w+j}^{*},\hat{M}_{j}^{*})\big){\rm P}(\hat{M}=M_{\rm opt})\nonumber\\
+ &&+c{\rm E}\Big\{|\hat{\psi}_{\rm opt}-\psi_{\rm opt}|1_{(\hat{M}=M_{\rm opt})} \Big\}\nonumber\\
+ &&+ {\rm P}(\hat{M}\neq M_{\rm opt})+o(1).
+\end{eqnarray}
+The inequality in Theorem 2 then follows.
+\section{Proof of Proposition 2} {\it Finite $2k$th moment.}
+Assume $\varepsilon_i, i=1,\cdots, n$ are i.i.d. random variables with finite $2k$'th moment $E(\varepsilon_i)^{2k}<\infty$ for an integer $k>0$, and design matrix satisfies Strong Irrepresentable Condition and (3.19)-(3.22). By Theorem 3 of \citet{zhao}, Lasso has strong sign consistency for $p_n=o(n^{(c_2-c_1)k})$. In particular, for any $\lambda_n$ satisfies $\lambda_n/\sqrt{n} =o( n^{\frac{c_2-c_1}{2}})$ and $p_n^{-1}(\lambda_n/\sqrt{n})^{2k}\rightarrow \infty$, one has ${\rm P}(\hat{M}\neq M_{\rm opt}|M_{\rm opt},\psi_{\rm opt}) = O(p_n n^k/\lambda_n^{2k})$, where $0\leq c_1<c_2
+ \leq 1$ are some constants. The selection consistency assumption {\it B1} is satisfied. Since the estimated coefficients of Lasso are continous functions of $\lambda$ and $0<P_* <1$, assumptions {\it B2} and {\it B4} follows obviously.
+ 
+Assume $p_n n^k/\lambda_n^{2k}=cn^{-a}$ for simplicity, where $a>0$ is a constant that can be estimated using a common method, e.g., MLE, and $c$ is a normalizing constant. We have
+\begin{align}
+     \frac{\log\{{\rm P}(\hat{M}^*\neq M_{\rm opt}|M_{\rm opt},\hat{\vec{\psi}}_{\rm opt})\}}{\log\{{\rm
+ P}(\hat{M}^*\neq M_{\rm opt}|M_{\rm opt},\vec{\psi}_{\rm opt})\}}
+ &=\frac{\log \hat{c}-\hat{a} \log n}{\log c- a \log n}\\
+ &\stackrel{\rm P}{\longrightarrow} 1. 
+\end{align}
+This is because $\log n =o(n^{1/2})$, $(\hat{a}- a)\log n= O_{\rm P}(n^{-1/2})o(n^{1/2})= o_{\rm P}(1)$. Hence, assumption {\it B3} is satisfied.
+
+\section{ Proof of Proposition 3} {\it Gaussian noise.}
+Assume $\varepsilon_i, i=1,\cdots, n$ are i.i.d. Gaussian random variables, and the design matrix satisfies the strong Irrepresentable Condition and (3.19)-(3.22), if there exists $0 \leq c_3 <c_2-c_1$ for which $p_n=O(e^{n^{c_3}})$, by Theorem 4 of \citet{zhao}, Lasso has strong sign consistency, i.e., for $\lambda \propto n^{\frac{1+c_4}{2}}$, with $c_3<c_4<c_2-c_1$, ${\rm P}(\hat{M}\neq M_{\rm opt}|M_{\rm opt},\psi_{\rm opt}) = o(e^{-n^{c_3}})$. Assumptions {\it B1, B2, B4} are satisfied.
+ 
+Assume ${\rm
+ P}(\hat{M}\neq M_{\rm opt}|M_{\rm opt},\psi_{\rm opt}) = c_1e^{-n^{c_2}-a_n}$, where $a_n$ is positive and goes to infinity at a slower rate than $n^{c_2}$, both $c_2$ and $a_n$ can be estimated. It follows that
+ \begin{equation}
+\begin{aligned}[b]
+ \frac{\log\{{\rm P}(\hat{M}^*\neq M_{\rm opt}|M_{\rm opt},\hat{\psi}_{\rm opt})\}}{\log\{{\rm
+ P}(\hat{M}^*\neq M_{\rm opt}|M_{\rm opt},\psi_{\rm opt})\}}
+ &=\frac{ - n^{\hat{c}_2}-\hat{a}_n+\log c_1}{ - n^{c_2}-a_n+\log c_1}\\
+ &\approx n^{\hat{c}_2- c_2}\\
+ &=e^{(\hat{c}_2- c_2)\log n}, 
+ \end{aligned}\label{ll}
+ \end{equation}
+ Since $\log n =o(n^{1/2})$, $(\hat{c}_2- c_2)\log n= O_{\rm P}(n^{-1/2})o(n^{1/2})= o_{\rm P}(1)$. Hence, as $n\rightarrow\infty$, (\ref{ll}) converges to 1; therefore, assumption {\it B3} is satisfied.
+ \section{Tables}
+ 
+ \begin{table}[!htbp]
+\centering
+\caption{Comparison on LM}
+\label{lm}
+\resizebox{!}{.35\paperheight}{
+\begin{tabular}{|lllllll|}
+\hline
+     &        & NMCS  &     &   & MCB   &        \\\hline
+Case & C.L.(\%)&$P^*$ & CP    & AW     & CP    & AW     \\\hline
+1    & 95     & 0.965 & 1.000 & 3.845  & 1.000 & 9.090  \\
+1    & 90     & 0.965 & 1.000 & 2.905  & 1.000 & 3.455  \\
+1    & 80     & 0.965 & 0.995 & 1.995  & 1.000 & 0.790  \\
+1    & 70     & 0.965 & 0.990 & 1.285  & 1.000 & 0.155  \\
+1    & 60     & 0.965 & 0.990 & 0.800  & 0.995 & 0.045  \\
+1    & 50     & 0.965 & 0.985 & 0.035  & 0.990 & 0.040  \\
+1    & 40     & 0.965 & 0.965 & 0.010  & 0.980 & 0.015  \\
+1    & 30     & 0.965 & 0.965 & 0.001  & 0.970 & 0.005  \\
+2    & 95     & 0.850 & 1.000 & 18.010 & 1.000 & 44.170 \\
+2    & 90     & 0.850 & 1.000 & 15.065 & 1.000 & 25.140 \\
+2    & 80     & 0.850 & 1.000 & 9.850  & 1.000 & 7.730  \\
+2    & 70     & 0.850 & 0.985 & 4.220  & 1.000 & 1.495  \\
+2    & 60     & 0.850 & 0.985 & 1.395  & 1.000 & 0.500  \\
+2    & 50     & 0.850 & 0.960 & 0.780  & 0.980 & 0.300  \\
+2    & 40     & 0.850 & 0.895 & 0.370  & 0.905 & 0.150  \\
+2    & 30     & 0.850 & 0.870 & 0.180  & 0.875 & 0.065  \\
+3    & 95     & 0.875 & 0.995 & 15.765 & 1.000 & 34.550 \\
+3    & 90     & 0.875 & 0.995 & 13.675 & 1.000 & 19.265 \\
+3    & 80     & 0.875 & 0.995 & 10.330 & 1.000 & 7.200  \\
+3    & 70     & 0.875 & 0.985 & 5.935  & 1.000 & 3.465  \\
+3    & 60     & 0.875 & 0.975 & 3.440  & 1.000 & 1.700  \\
+3    & 50     & 0.875 & 0.980 & 2.665  & 0.990 & 0.845  \\
+3    & 40     & 0.875 & 0.965 & 1.320  & 0.960 & 0.440  \\
+3    & 30     & 0.875 & 0.935 & 0.990  & 0.945 & 0.230 
+ \\\hline
+\end{tabular}}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{NMCS for logistic regression}
+\label{logistic}
+\resizebox{!}{.35\paperheight}{
+\begin{tabular}{|llllll|}
+\hline
+Case & C.L.(\%) & SIS\_rate &$P^*$ & CP       & AW     \\\hline
+1    & 95   & 1.000      & 0.595                & 0.990 & 33.040 \\
+1    & 90   & 1.000      & 0.595                & 0.990 & 21.325 \\
+1    & 80   & 1.000      & 0.595                & 0.995 & 8.035  \\
+1    & 70   & 1.000      & 0.595                & 0.980 & 3.785  \\
+1    & 60   & 1.000      & 0.595                & 0.940 & 1.990  \\
+1    & 50   & 1.000      & 0.595                & 0.860 & 1.240  \\
+1    & 40   & 1.000      & 0.595                & 0.750 & 0.700  \\
+1    & 30   & 1.000      & 0.595                & 0.595 & 0.305  \\
+2    & 95   & 0.980      & 0.480                & 0.970 & 53.060 \\
+2    & 90   & 0.980      & 0.480                & 0.955 & 37.505 \\
+2    & 80   & 0.980      & 0.480                & 0.955 & 17.065 \\
+2    & 70   & 0.980      & 0.480                & 0.940 & 10.045 \\
+2    & 60   & 0.980      & 0.480                & 0.905 & 5.600  \\
+2    & 50   & 0.980      & 0.480                & 0.855 & 2.840  \\
+2    & 40   & 0.980      & 0.480                & 0.765 & 1.640  \\
+2    & 30   & 0.980      & 0.480                & 0.600 & 0.950  \\
+3    & 95   & 0.970      & 0.365                & 0.905 & 74.840 \\
+3    & 90   & 0.970      & 0.365                & 0.905 & 63.785 \\
+3    & 80   & 0.970      & 0.365                & 0.905 & 42.570 \\
+3    & 70   & 0.970      & 0.365                & 0.905 & 29.970 \\
+3    & 60   & 0.970      & 0.365                & 0.900 & 20.080 \\
+3    & 50   & 0.970      & 0.365                & 0.880 & 15.325 \\
+3    & 40   & 0.970      & 0.365                & 0.820 & 11.285 \\
+3    & 30   & 0.970      & 0.365                & 0.730 & 6.435  \\\hline
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{NMCS for GAM}
+\label{gam}
+{\footnotesize
+\begin{tabular}{|llll|}
+\hline
+C.L.(\%) & $P^*$   & CP   & AW    \\\hline
+95 & 0.24 & 0.99 & 23.59 \\
+90 & 0.24 & 0.97 & 22.49 \\
+80 & 0.24 & 0.96 & 20.77 \\
+70 & 0.24 & 0.94 & 18.82 \\
+60 & 0.24 & 0.91 & 17.03 \\
+50 & 0.24 & 0.92 & 15.28 \\
+40 & 0.24 & 0.88 & 13.36 \\
+30 & 0.24 & 0.87 & 11.26 \\\hline
+\end{tabular}}
+\end{table}
+\begin{table}[!htbp]
+\centering
+\caption{Performance of LogP measure on LM}
+\label{logp}
+{\footnotesize
+\begin{tabular}{|lllllllll|}
+\hline
+Penalty & $n$   & $p$   & $B$    & ${\rm E}(\widehat{\rm LogP})$ & ${\rm LogP}$  & $P^{*}$ & \%RB    & CV    \\ \hline
+Lasso   & 50  & 18  & 500  & -0.096  & -0.186 & 0.170      & -48.3 & 0.94 \\
+SCAD    & 50  & 18  & 500  & -1.343  & -1.561 & 0.790     & -13.9 & 0.45 \\
+ALasso & 50  & 18  & 500  & -1.571  & -1.609 & 0.800     & -2.4  & 0.52 \\
+Lasso   & 100 & 31  & 500  & -0.177  & -0.439 & 0.355     & -59.7 & 0.86 \\
+SCAD    & 100 & 31  & 500  & -2.148  & -2.254 & 0.895     & -4.7  & 0.31 \\
+ALasso & 100 & 31  & 500  & -2.482  & -2.303 & 0.900     & 7.8   & 0.46 \\
+Lasso   & 200 & 53  & 500  & -0.256  & -0.486 & 0.385     & -47.4 & 0.74 \\
+SCAD    & 200 & 53  & 500  & -2.727  & -2.659 & 0.930     & 2.6   & 0.24 \\
+ALasso & 200 & 53  & 500  & -4.516  & -3.912 & 0.980     & 15.4  & 0.43 \\
+Lasso   & 500 & 105 & 500  & -0.402  & -0.589 & 0.445     & -31.8 & 0.64 \\
+SCAD    & 500 & 105 & 500  & -3.298  & -2.733 & 0.935     & 20.7  & 0.23 \\
+ALasso & 500 & 105 & 500  & -7.901  & -5.298 & 0.995      & 49.1  & 0.25 \\
+Lasso   & 500 & 105 & 1000 & -0.412  & -0.669 & 0.488      & -38.5 & 0.64 \\
+SCAD    & 500 & 105 & 1000 & -3.361  & -3.124 & 0.956      & 7.6   & 0.19 \\
+ALasso & 500 & 105 & 1000 & -7.675  & -5.298 & 0.995      & 44.9  & 0.26 \\ \hline
+\end{tabular}}
+\end{table}
+\begin{table}[!htbp]
+\centering
+\caption{Comparison on NDD1 data}
+\label{motif}
+\resizebox{\textwidth}{!}{%
+%{\scriptsize
+\begin{tabular}{|llllllll|}
+\hline
+Criterion    & Method&$\hat{M}$ & LogP   & C.L. & Width & LBM         & UBM                                       \\ \hline
+ALasso-BIC & NMCS& 1,  5, 80   &-0.028                   & 0.95 & 22    & NULL & 1, 4, 5, 8, 10, 12, 15, 25,...             \\
+           & &        &                                 & 0.9  & 11   & NULL & 1, 4, 5, 12, 15, 26, 47, 54...                \\
+            & &     &                                    & 0.8  & 6     & NULL & 1, 4, 5, 12, 80, 96                     \\
+             & &     &                                   & 0.7  & 4     & NULL & 1, 4, 5, 80                                    \\
+             & MCB& 1, 5,  80     &               & 0.95 & 65    & NULL & 1, 2, 3, 4, 5, 8, 10, 11, 12, ...             \\
+             & &    &                                    & 0.9  & 64    & 1 & 1, 2, 3, 4, 5, 8, 10, 11, 12, ...             \\
+            & &     &                                   & 0.8  & 63    & 1, 5 & 1, 2, 3, 4, 5, 8, 10, 11, 12, ...             \\
+           & &      &                                   & 0.7  & 62    & 1, 5, 80 & 1, 2, 3, 4, 5, 8, 10, 11, 12, ...             \\
+            \hline
+ALasso-CV  & NMCS& 1, 4, 5, 80         & -0.030           & 0.95 & 21    & NULL & 1, 4, 5, 10, 12, 15, 16, 25,...             \\
+             & &    &                                     & 0.9  & 10    & NULL & 1, 4, 5, 12, 15, 26, 47, 54, 80, 96           \\
+            & &     &                                    & 0.8  & 5    & NULL & 1, 4, 5, 12, 80            \\
+             & &    &                                     & 0.7  & 3    & NULL & 1, 5, 80              \\
+             & MCB& 1, 5,  80     &               & 0.95 & 50    & NULL & 1, 2, 3, 4, 5, 8, 10, 11, 12, ...             \\
+             & &    &                                    & 0.9  & 40   & NULL & 1, 2, 3, 4, 5, 8, 10, 11, 12, ...             \\
+            & &     &                                   & 0.8  & 25    &  1 & 1, 2, 3, 4, 5,  10, 11, 12, ...             \\
+           & &      &                                   & 0.7  & 12    & 1 & 1, 2, 3, 4, 5,19,44,47 ...             \\ \hline
+\end{tabular}%
+}
+\end{table}
+\begin{table}[!htbp]
+\centering
+\caption{NMCS for South African Heart Disease Data}
+\label{sah}
+\resizebox{!}{.35\paperheight}{%
+\begin{tabular}{|llllllll|}
+\hline
+Penalty        & Tune & $\hat{M}$             & LogP   & C.L. & Width & LBM         & UBM                    \\ \hline
+Lasso          & AIC  & 1, 2, 3, 5, 6, 7, 9 & -0.139 & 0.95 & 6     & 2, 5, 9     & 1:9                    \\
+               &      &               &        & 0.9  & 6     & 2, 5, 9     & 1:9                    \\
+               &      &               &        & 0.8  & 5     & 2, 3, 5,  9 & 1:9                    \\
+               &      &               &        & 0.7  & 4     & 2, 3, 5, 6, 9 & 1:9 \\
+               & BIC: & 1, 2, 3, 5, 6, 9   & -0.228 & 0.95 & 8     & 9       & 1:9                    \\
+               &      &               &        & 0.9  & 7     & 5, 9         & 1:9                    \\
+               &      &               &        & 0.8  & 7     & 5, 9         & 1:9                    \\
+               &      &               &        & 0.7  & 5     & 2, 3, 5, 9       & 1:9                    \\
+               & CV   & 2, 3, 5, 6, 9 & -0.521 & 0.95 & 7     & NULL     & 1, 2, 3, 5, 6, 7, 9                   \\
+               &      &               &        & 0.9  & 6     & NULL    & 1, 2, 3, 5, 6, 7, 9                     \\
+               &      &               &        & 0.8  & 4     & 2, 5, 9  &  1, 2, 3, 5, 6, 7, 9                    \\
+               &      &               &        & 0.7  & 3     & 2, 5, 9  & 1, 2, 3, 5, 6,  9 \\ \hline
+ALasso & AIC  & 2, 3, 5, 6, 9 & -0.446 & 0.95 & 6     & 9        & 1, 2, 3, 5, 6, 7, 9       \\
+               &      &               &        & 0.9  & 5     & 9        & 1, 2, 3, 5, 6, 9          \\
+               &      &               &        & 0.8  & 3     & 5, 9     & 2, 3, 5, 6, 9          \\
+               &      &               &        & 0.7  & 2     & 2, 5, 9     & 2, 3, 5, 6, 9          \\
+               & BIC  & 2, 3, 5, 6, 9 & -0.729 & 0.95 & 6     & 2, 5, 9     & 1:9 \\
+               &      &               &        & 0.9  & 4     & 2, 3, 5, 9     & 1, 2, 3, 5, 6, 7, 9    \\
+               &      &               &        & 0.8  & 3     & 2, 3, 5, 9  & 1, 2, 3, 5, 6, 7, 9       \\
+               &      &               &        & 0.7  & 2     & 2, 3, 5, 9  & 1, 2, 3, 5, 6, 9       \\
+               & CV   & 2, 5, 9 & -0.465 & 0.95 & 2     &  2, 5, 9        & 2, 3, 5, 6,  9    \\
+               &      &               &        & 0.9  & 2     & 2, 5, 9        & 2, 3, 5, 6, 9       \\
+               &      &               &        & 0.8  & 1     & 2, 5, 9        & 2, 3, 5, 9          \\
+               &      &               &        & 0.7  & 1     & 2, 5, 9     & 2, 3, 5, 9          \\ \hline
+\end{tabular}%
+}
+\end{table}
+
+
+\begin{thebibliography}{}
+\bibitem[Efron, Hastie and Tibshirani(2004)]{efron2004}
+Efron, B., Hastie, T., Johnstone, I., and Tibshirani, R. (2004). Least angle regression.{\it Annals of Statistics} 32(2), 407–499.
+]
+\bibitem[Hastie et al.(2007)]{hastie2007}
+Hastie, T., Taylor, J., Tibshirani, R., and Walther, G. (2007). Forward stagewise regression and the monotone lasso. {\it Electronic Journal of Statistics, Electron. J. Statist.} 1(none), 1-29.
+\bibitem[Jiang(2010)]{jiang}
+Jiang, J. (2010), Large Sample Techniques for Statistics, {\it Springer}, New York.
+\bibitem[Portnoy(1984)]{portnoy}
+Portnoy, S.(1984), Asymptotic Behavior of $M$-Estimators of  $p$
+ Regression Parameters when $p^2/n$ is Large. I. Consistency. {\it Ann. Statist.} 12 (4) 1298 - 1309. 
+ 
+\bibitem[Zhao and Yu(2006)]{zhao}
+Zhao, P. and Yu, B (2006),  On Model Selection Consistency of Lasso, {\it Journal of Machine Learning Research} 7, 2541--2563.
+
+\end{thebibliography}
+\end{document}
